@@ -1,0 +1,48 @@
+<h1>Introduction</h1>
+<p>Github: https://github.com/milindl/NPC-name</p>
+<p>This is a generator for NPC(Non-Playing Character) names. This was motivated by the book Caves of Steel, in which there&#8217;s a character called Daneel. It&#8217;s similar to Daniel, but not the same, and hence it&#8217;s a suitable, mysterious-yet-forgettable name - perfect for NPCs.</p>
+<p>The basic idea behind it is: take a &#8220;seed&#8221; name, and try to come up with names &#8220;close&#8221; to the seed name. A genetic algorithm comes up with new names in each generation, and a fitness function determines how close that is to the seed name. As soon as it&#8217;s close enough, the genetic algorithm terminates, and we can use the multitude of names generated.</p>
+<p>The names themselves must be in IPA. For further reference, read https://en.wikipedia.org/wiki/International_Phonetic_Alphabet. It&#8217;s also worth looking at the chart of 44 IPA I&#8217;ve used, since those must be used to spell names - http://www.antimoon.com/resources/phonchart2008.pdf,</p>
+<h1>Working</h1>
+<h2>Genetic Algorithm</h2>
+<p>The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out https://en.wikipedia.org/wiki/Genetic_algorithm and then try doing  https://www.codewars.com/kata/binary-genetic-algorithms/javascript if they wish to.</p>
+<p>The fitness I&#8217;ve used is</p>
+<p>$$ f = \frac{\text{AlignmentScore}(\text{generated},\text{seed})}{\text{Mean}(\text{generated.length}, \text{seed.length})} $$</p>
+<p>I&#8217;ve described the AlignmentScore below.</p>
+<p><span style="text-decoration:underline;">Note</span> : In this working, the fitness can sometimes exceed the perfect fitness which is 1 (perfect fitness := when generated and seed are same).
+  This is because I&#8217;m dividing with the mean, and not the max, of the lengths(the lengths are variable).</p>
+<h2>Alignment Scoring</h2>
+<p>Each possible aligment of the sequences(generated and seed) is given a score as per the following criteria:</p>
+<ol>
+  <li>1 point for match</li>
+  <li>x points for mismatch</li>
+  <li>A penalty &Delta; for gaps
+    <p>x is decided by how similar sounding the alphabet in the first sequence is to the second one.</p>
+    <p>For example, the mismatch (au, Ou) has a higher score than (t, s), since it makes a similar sound.
+      The complete list of scores can be found in the comparison matrix, a 44x44 matrix that provides the key to mismatch scores.</p>
+    <p>The alignment score that is the best amongst all possible alignment scores is returned by AlignmentScore.</p>
+    <p>The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices(https://en.wikipedia.org/wiki/Point_accepted_mutation), a system that tells us how likely a protien is to change from one form to another over time. I&#8217;ve tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.</p>
+    <p>The 44 rows/cols of the matrix represent IPAs, and if we want to see how similar IPA1 is to IPA2, we can simply go to the row corresponding to IPA1 and the col corresponding to IPA2 and look at its value.</p>
+    <p>The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm for an exact description of the algorithm.</p>
+  </li>
+</ol>
+<h1>Illustration</h1>
+<p>Seed name: d ei v i d (DAVID)</p>
+<p>Generated names:</p>
+<ul>
+  <li>d ei o: i d (DAOUID) (DAY - OO - EE - D)</li>
+  <li>d ei v i TH (DAVITH)</li>
+  <li>d ei v TH (DAVTH) (pretty much useless)</li>
+  <li>d ei v i e:(r) (DAVIER)</li>
+  <li>TH ei v i (THAYVI) (TH as in THIN)</li>
+</ul>
+<p>Clearly, not all of them are useable, but they&#8217;re not useless either.</p>
+<h1>Justification and Future Work</h1>
+<h2>Justification for Techniques Used</h2>
+<p>I wanted to implement a GA properly, and I am interested in sequence alignment, so this seemed like a great opportunity. I could alternatively made substitution tables and then substituted in the original (ie approach it from the other side).</p>
+<p>This would have probably been faster, but it would&#8217;ve lacked the feel of the language somehow changing. Though I didn&#8217;t base the comparison off the actual evolution of the language, it could possibly be done by not making the comparison matrix symmetric (to model the flow of time) and by basing the data off actual fact :)</p>
+<h2>Future Work</h2>
+<ol>
+  <li>Base off actual data (comparison matrix improvements)</li>
+  <li>Make the alignment score dependant on the <i>neighbouring</i> letters as well. Some letters tend to be in pairs, and that&#8217;s ignored here.</li>
+</ol>
