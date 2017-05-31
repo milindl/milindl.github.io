@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include head.html %}
+    <body>
+        {% include header.html %}
+        {% assign postsByYearMonth = site.posts | group_by_exp:"post", "post.date | date: '%b %Y'"  %}
+        {% for yearMonth in postsByYearMonth %}
+        <h3>{{ yearMonth.name }}</h3>
+        <ul>
+            {% for post in yearMonth.items %}
+            <li>
+                <a href="{{ post.url }}"><h3>{{ post.title }}</h3></a>
+                {% if post.summary %}
+                {{ post.summary }} <a href ="{{ post.url }}">Read on... &raquo;</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+        <style type="text/css">
+         ul li h3 {
+             margin: 0.2em;
+         }
+         ul li {
+             list-style-type: none
+             padding: 5px;
+             padding-top: 0.5em;
+             padding-bottom: 0.5em;
+         }
+        </style>
+
+    </body>
+</html>

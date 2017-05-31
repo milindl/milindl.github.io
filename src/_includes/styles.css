@@ -1,0 +1,10 @@
+@import 'https://fonts.googleapis.com/css?family=Amatic+SC|Crimson+Text|Open+Sans';
+body {
+    z-index:500;
+    max-width: 960px;
+    font-family: 'Crimson Text';
+    margin: 0 auto;
+}
+header h1, h2, h3, h4, h5, h6 {
+    font-family: 'Amatic SC', sans;
+}

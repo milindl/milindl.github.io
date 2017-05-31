@@ -1,0 +1,19 @@
+---
+layout: default
+title: Test Post
+summary: a good summary for my post
+---
+
+
+This post is designed to see if I got the org mode working right for this.
+
+So, let's begin testing by typesetting some equations.
+
+$$ a^2 + b^2 \neq (a + b)^2 $$
+
+* A Heading
+
+| Are   | Tables | Allowed | As    | Well? |
+|-------+--------+---------+-------+-------|
+| Stuff | Inside | the     | table | wow   |
+|-------+--------+---------+-------+-------|
