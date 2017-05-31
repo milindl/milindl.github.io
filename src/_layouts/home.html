@@ -3,15 +3,15 @@
     {% include head.html %}
     <body>
         {% include header.html %}
-        {% assign postsByYearMonth = site.posts | group_by_exp:"post", "post.date | date: '%b %Y'"  %}
+        {% assign postsByYearMonth = site.posts | group_by_exp:"post", "post.date | date: '%Y %b'"  %}
         {% for yearMonth in postsByYearMonth %}
         <h3>{{ yearMonth.name }}</h3>
         <ul>
-            {% for post in yearMonth.items %}
+            {% for post in site.posts %}
             <li>
-                <a href="{{ post.url }}"><h3>{{ post.title }}</h3></a>
+                <h3><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
                 {% if post.summary %}
-                {{ post.summary }} <a href ="{{ post.url }}">Read on... &raquo;</a>
+                {{ post.summary }} <a href ="{{ site.baseurl }}{{ post.url }}">Read on... &raquo;</a>
                 {% endif %}
             </li>
             {% endfor %}
@@ -22,7 +22,7 @@
              margin: 0.2em;
          }
          ul li {
-             list-style-type: none
+             list-style-type: none;
              padding: 5px;
              padding-top: 0.5em;
              padding-bottom: 0.5em;

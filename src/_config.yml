@@ -15,7 +15,9 @@
 # in the templates via {{ site.myvariable }}.
 title: "Milind's Writeups"
 description: > # this means to ignore newlines until "baseurl:"
-  Musings and writeups that I might do.
+  Hello, I'm an undergraduate student at IIT Kanpur.
+  I'm going to use these pages to document any interesting stuff I think of, or anything I
+  write, really.
 baseurl: "/www" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  milindl

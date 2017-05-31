@@ -1,0 +1,45 @@
+<aside class="footer">
+    <section class="left">
+        <ul>
+            <li><a href="//milindl.org">milindl.org</a></li>
+            <li><a href="//github.com/milindl">github</a></li>
+            <li><a href="//facebook.com/milind.luthra">facebook</a></li>
+            <li>milindl [at] iitk.ac.in</li>
+        </ul>
+    </section>
+    <section class="right">
+        <p>{{ site.description }}</p>
+        <p>Blog hosted at github pages :)</p>
+    </section>
+</aside>
+
+<!-- Footer styles -->
+
+<style type="text/css">
+ .footer {
+     display: flex;
+     justify-content: space-around;
+     align-items: baseline;
+     margin: 0.5em;
+     margin-top: 1em;
+ }
+ .footer section {
+     /* border: 1px solid black; */
+ }
+ .footer section ul li {
+     margin: 0px;
+     list-style-type: none;
+ }
+ .footer section ul {
+     padding: 0px;
+     margin: 0px;
+ }
+ .footer .left {
+     flex-basis: 60%;
+     text-align: left;
+ }
+ .footer .right {
+     flex-basis: 40%;
+     text-align: right;
+ }
+</style>

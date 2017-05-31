@@ -1,19 +1,11 @@
 ---
 layout: default
-title: Test Post
-summary: a good summary for my post
+title: First Post
+summary: A post primarily for testing and making sure everything works.
 ---
 
 
-This post is designed to see if I got the org mode working right for this.
+The main purpose of this post was to check styles and make sure that org-mode is working,
+and any scripts I use for posting run alright.
 
-So, let's begin testing by typesetting some equations.
-
-$$ a^2 + b^2 \neq (a + b)^2 $$
-
-* A Heading
-
-| Are   | Tables | Allowed | As    | Well? |
-|-------+--------+---------+-------+-------|
-| Stuff | Inside | the     | table | wow   |
-|-------+--------+---------+-------+-------|
+It has no real content, so there's no point to reading it, but thanks anyway.

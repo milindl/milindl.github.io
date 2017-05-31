@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>
-         Test Post |
+         First Post |
         
         Milind's Writeups
    </title>
@@ -265,7 +265,7 @@
  }
  a {
      color: #0095dd;
-     text-decoration:none; 
+     text-decoration:none;
  }
  a:hover {
      color:white;
@@ -304,50 +304,124 @@
 </style>
 
       <div class="page-navigation">
+    <div class="prev-container">
      
-      <a href="/www">Up</a>
+    </div>
+    <div class="up-container">
+        <a class="up" href="/www">Up</a>
+    </div>
+    <div class="next-container">
      
-      <a class="next" href="/jekyll/update/2017/05/31/welcome-to-jekyll.html">Welcome to Jekyll! &raquo;</a>
-     
+    </div>
 </div>
-
 <!-- page nav styles -->
 
 <style type="text/css">
  .page-navigation {
      margin: 0 auto;
-     text-align: center
+     display: flex;
+     justify-content: space-between;
  }
+ .page-navigation .prev-container {
+     flex-basis: 40%;
+     text-align: left;
+ }
+ .page-navigation a {
+      text-align: center;
+  }
+ .page-navigation .next-container {
+     text-align: right;
+     flex-basis: 40%;
+ }
+
 </style>
 
 
         <section class="page-wrapper">
-            <h1>Test Post</h1>
-            <p>This post is designed to see if I got the org mode working right for this.</p>
-<p>So, let&#8217;s begin testing by typesetting some equations.</p>
-<p>$$ a^2 + b^2 &ne; (a + b)^2 $$</p>
-<h1>A Heading</h1>
-<table>
-  <tr><th>Are</th><th>Tables</th><th>Allowed</th><th>As</th><th>Well?</th></tr>
-  <tr><td>Stuff</td><td>Inside</td><td>the</td><td>table</td><td>wow</td></tr>
-</table>
+            <h1>First Post</h1>
+            <p>The main purpose of this post was to check styles and make sure that org-mode is working,
+  and any scripts I use for posting run alright.</p>
+<p>It has no real content, so there&#8217;s no point to reading it, but thanks anyway.</p>
 
         </section>
 
       <div class="page-navigation">
+    <div class="prev-container">
      
-      <a href="/www">Up</a>
+    </div>
+    <div class="up-container">
+        <a class="up" href="/www">Up</a>
+    </div>
+    <div class="next-container">
      
-      <a class="next" href="/jekyll/update/2017/05/31/welcome-to-jekyll.html">Welcome to Jekyll! &raquo;</a>
-     
+    </div>
 </div>
-
 <!-- page nav styles -->
 
 <style type="text/css">
  .page-navigation {
      margin: 0 auto;
-     text-align: center
+     display: flex;
+     justify-content: space-between;
+ }
+ .page-navigation .prev-container {
+     flex-basis: 40%;
+     text-align: left;
+ }
+ .page-navigation a {
+      text-align: center;
+  }
+ .page-navigation .next-container {
+     text-align: right;
+     flex-basis: 40%;
+ }
+
+</style>
+
+        <aside class="footer">
+    <section class="left">
+        <ul>
+            <li><a href="//milindl.org">milindl.org</a></li>
+            <li><a href="//github.com/milindl">github</a></li>
+            <li><a href="//facebook.com/milind.luthra">facebook</a></li>
+            <li>milindl [at] iitk.ac.in</li>
+        </ul>
+    </section>
+    <section class="right">
+        <p>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
+</p>
+        <p>Blog hosted at github pages :)</p>
+    </section>
+</aside>
+
+<!-- Footer styles -->
+
+<style type="text/css">
+ .footer {
+     display: flex;
+     justify-content: space-around;
+     align-items: baseline;
+     margin: 0.5em;
+     margin-top: 1em;
+ }
+ .footer section {
+     /* border: 1px solid black; */
+ }
+ .footer section ul li {
+     margin: 0px;
+     list-style-type: none;
+ }
+ .footer section ul {
+     padding: 0px;
+     margin: 0px;
+ }
+ .footer .left {
+     flex-basis: 60%;
+     text-align: left;
+ }
+ .footer .right {
+     flex-basis: 40%;
+     text-align: right;
  }
 </style>
 

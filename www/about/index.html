@@ -265,7 +265,7 @@
  }
  a {
      color: #0095dd;
-     text-decoration:none; 
+     text-decoration:none;
  }
  a:hover {
      color:white;
@@ -304,18 +304,36 @@
 </style>
 
       <div class="page-navigation">
+    <div class="prev-container">
      
-      <a href="/www">Up</a>
+    </div>
+    <div class="up-container">
+        <a class="up" href="/www">Up</a>
+    </div>
+    <div class="next-container">
      
+    </div>
 </div>
-
 <!-- page nav styles -->
 
 <style type="text/css">
  .page-navigation {
      margin: 0 auto;
-     text-align: center
+     display: flex;
+     justify-content: space-between;
  }
+ .page-navigation .prev-container {
+     flex-basis: 40%;
+     text-align: left;
+ }
+ .page-navigation a {
+      text-align: center;
+  }
+ .page-navigation .next-container {
+     text-align: right;
+     flex-basis: 40%;
+ }
+
 </style>
 
 
@@ -349,17 +367,82 @@
         </section>
 
       <div class="page-navigation">
+    <div class="prev-container">
      
-      <a href="/www">Up</a>
+    </div>
+    <div class="up-container">
+        <a class="up" href="/www">Up</a>
+    </div>
+    <div class="next-container">
      
+    </div>
 </div>
-
 <!-- page nav styles -->
 
 <style type="text/css">
  .page-navigation {
      margin: 0 auto;
-     text-align: center
+     display: flex;
+     justify-content: space-between;
+ }
+ .page-navigation .prev-container {
+     flex-basis: 40%;
+     text-align: left;
+ }
+ .page-navigation a {
+      text-align: center;
+  }
+ .page-navigation .next-container {
+     text-align: right;
+     flex-basis: 40%;
+ }
+
+</style>
+
+        <aside class="footer">
+    <section class="left">
+        <ul>
+            <li><a href="//milindl.org">milindl.org</a></li>
+            <li><a href="//github.com/milindl">github</a></li>
+            <li><a href="//facebook.com/milind.luthra">facebook</a></li>
+            <li>milindl [at] iitk.ac.in</li>
+        </ul>
+    </section>
+    <section class="right">
+        <p>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
+</p>
+        <p>Blog hosted at github pages :)</p>
+    </section>
+</aside>
+
+<!-- Footer styles -->
+
+<style type="text/css">
+ .footer {
+     display: flex;
+     justify-content: space-around;
+     align-items: baseline;
+     margin: 0.5em;
+     margin-top: 1em;
+ }
+ .footer section {
+     /* border: 1px solid black; */
+ }
+ .footer section ul li {
+     margin: 0px;
+     list-style-type: none;
+ }
+ .footer section ul {
+     padding: 0px;
+     margin: 0px;
+ }
+ .footer .left {
+     flex-basis: 60%;
+     text-align: left;
+ }
+ .footer .right {
+     flex-basis: 40%;
+     text-align: right;
  }
 </style>
 
