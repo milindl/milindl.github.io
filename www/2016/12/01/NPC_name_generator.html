@@ -306,14 +306,14 @@
       <div class="page-navigation">
     <div class="prev-container">
      
-      <a class="prev" href="/www/2017/05/31/test_post.html">&laquo; First Post</a>
-      
     </div>
     <div class="up-container">
         <a class="up" href="/www">Up</a>
     </div>
     <div class="next-container">
      
+        <a class="next" href="/www/2017/05/31/test_post.html">First Post &raquo;</a>
+        
     </div>
 </div>
 <!-- page nav styles -->
@@ -342,14 +342,13 @@
         <section class="page-wrapper">
             <h1>NPC Name Generator</h1>
             <h1>Introduction</h1>
-<p>Github: <a href="https://github.com/milindl/NPC-name">https://github.com/milindl/NPC-name</a></p>
+<p>Github: https://github.com/milindl/NPC-name</p>
 <p>This is a generator for NPC(Non-Playing Character) names. This was motivated by the book Caves of Steel, in which there&#8217;s a character called Daneel. It&#8217;s similar to Daniel, but not the same, and hence it&#8217;s a suitable, mysterious-yet-forgettable name - perfect for NPCs.</p>
 <p>The basic idea behind it is: take a &#8220;seed&#8221; name, and try to come up with names &#8220;close&#8221; to the seed name. A genetic algorithm comes up with new names in each generation, and a fitness function determines how close that is to the seed name. As soon as it&#8217;s close enough, the genetic algorithm terminates, and we can use the multitude of names generated.</p>
-<p>The names themselves must be in IPA. For further reference, read <a href="https://en.wikipedia.org/wiki/International_Phonetic_Alphabet">https://en.wikipedia.org/wiki/International_Phonetic_Alphabet</a>. It&#8217;s also worth looking at the chart of 44 IPA I&#8217;ve used, since those must be used to spell names - <a href="http://www.antimoon.com/resources/phonchart2008.pdf">http://www.antimoon.com/resources/phonchart2008.pdf</a>,</p>
-<p>I wrote this a while back, but the blog is a nice place for it.</p>
+<p>The names themselves must be in IPA. For further reference, read https://en.wikipedia.org/wiki/International_Phonetic_Alphabet. It&#8217;s also worth looking at the chart of 44 IPA I&#8217;ve used, since those must be used to spell names - http://www.antimoon.com/resources/phonchart2008.pdf,</p>
 <h1>Working</h1>
 <h2>Genetic Algorithm</h2>
-<p>The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out <a href="https://en.wikipedia.org/wiki/Genetic_algorithm">https://en.wikipedia.org/wiki/Genetic_algorithm</a> and then try doing  <a href="https://www.codewars.com/kata/binary-genetic-algorithms/javascript">https://www.codewars.com/kata/binary-genetic-algorithms/javascript</a> if they wish to.</p>
+<p>The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out https://en.wikipedia.org/wiki/Genetic_algorithm and then try doing  https://www.codewars.com/kata/binary-genetic-algorithms/javascript if they wish to.</p>
 <p>The fitness I&#8217;ve used is</p>
 <p>$$ f = \frac{\text{AlignmentScore}(\text{generated},\text{seed})}{\text{Mean}(\text{generated.length}, \text{seed.length})} $$</p>
 <p>I&#8217;ve described the AlignmentScore below.</p>
@@ -365,9 +364,9 @@
     <p>For example, the mismatch (au, Ou) has a higher score than (t, s), since it makes a similar sound.
       The complete list of scores can be found in the comparison matrix, a 44x44 matrix that provides the key to mismatch scores.</p>
     <p>The alignment score that is the best amongst all possible alignment scores is returned by AlignmentScore.</p>
-    <p>The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices(<a href="https://en.wikipedia.org/wiki/Point_accepted_mutation">https://en.wikipedia.org/wiki/Point_accepted_mutation</a>), a system that tells us how likely a protien is to change from one form to another over time. I&#8217;ve tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.</p>
+    <p>The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices(https://en.wikipedia.org/wiki/Point_accepted_mutation), a system that tells us how likely a protien is to change from one form to another over time. I&#8217;ve tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.</p>
     <p>The 44 rows/cols of the matrix represent IPAs, and if we want to see how similar IPA1 is to IPA2, we can simply go to the row corresponding to IPA1 and the col corresponding to IPA2 and look at its value.</p>
-    <p>The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up <a href="https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm">https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm</a> for an exact description of the algorithm.</p>
+    <p>The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm for an exact description of the algorithm.</p>
   </li>
 </ol>
 <h1>Illustration</h1>
@@ -396,14 +395,14 @@
       <div class="page-navigation">
     <div class="prev-container">
      
-      <a class="prev" href="/www/2017/05/31/test_post.html">&laquo; First Post</a>
-      
     </div>
     <div class="up-container">
         <a class="up" href="/www">Up</a>
     </div>
     <div class="next-container">
      
+        <a class="next" href="/www/2017/05/31/test_post.html">First Post &raquo;</a>
+        
     </div>
 </div>
 <!-- page nav styles -->

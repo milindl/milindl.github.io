@@ -1,26 +1,23 @@
 ---
 layout: default
 title: NPC Name Generator
-summary: I made a generator to create names for NPCs which have a realistic 'mouthfeel' but are far from real human names.
 ---
 
 * Introduction
    
-   Github: [[https://github.com/milindl/NPC-name]]
+   Github: https://github.com/milindl/NPC-name
 
 
    This is a generator for NPC(Non-Playing Character) names. This was motivated by the book Caves of Steel, in which there's a character called Daneel. It's similar to Daniel, but not the same, and hence it's a suitable, mysterious-yet-forgettable name - perfect for NPCs.
 
    The basic idea behind it is: take a "seed" name, and try to come up with names "close" to the seed name. A genetic algorithm comes up with new names in each generation, and a fitness function determines how close that is to the seed name. As soon as it's close enough, the genetic algorithm terminates, and we can use the multitude of names generated.
 
-   The names themselves must be in IPA. For further reference, read [[https://en.wikipedia.org/wiki/International_Phonetic_Alphabet]]. It's also worth looking at the chart of 44 IPA I've used, since those must be used to spell names - [[http://www.antimoon.com/resources/phonchart2008.pdf]],
-
-   I wrote this a while back, but the blog is a nice place for it.
+   The names themselves must be in IPA. For further reference, read https://en.wikipedia.org/wiki/International_Phonetic_Alphabet. It's also worth looking at the chart of 44 IPA I've used, since those must be used to spell names - http://www.antimoon.com/resources/phonchart2008.pdf,
 
 * Working  
 ** Genetic Algorithm
     
-    The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out [[https://en.wikipedia.org/wiki/Genetic_algorithm]] and then try doing  [[https://www.codewars.com/kata/binary-genetic-algorithms/javascript]] if they wish to.
+    The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out https://en.wikipedia.org/wiki/Genetic_algorithm and then try doing  https://www.codewars.com/kata/binary-genetic-algorithms/javascript if they wish to.
 
     The fitness I've used is
 
@@ -44,11 +41,11 @@ summary: I made a generator to create names for NPCs which have a realistic 'mou
 
    The alignment score that is the best amongst all possible alignment scores is returned by AlignmentScore.
 
-   The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices([[https://en.wikipedia.org/wiki/Point_accepted_mutation]]), a system that tells us how likely a protien is to change from one form to another over time. I've tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.
+   The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices(https://en.wikipedia.org/wiki/Point_accepted_mutation), a system that tells us how likely a protien is to change from one form to another over time. I've tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.
    
    The 44 rows/cols of the matrix represent IPAs, and if we want to see how similar IPA1 is to IPA2, we can simply go to the row corresponding to IPA1 and the col corresponding to IPA2 and look at its value.
    
-   The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up [[https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm]] for an exact description of the algorithm.
+   The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm for an exact description of the algorithm.
 
 * Illustration
 
