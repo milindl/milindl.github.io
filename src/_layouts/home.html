@@ -3,9 +3,11 @@
     {% include head.html %}
     <body>
         {% include header.html %}
-        <!-- This loops through the paginated posts -->
+        {% assign postsByYearMonth = site.posts | group_by_exp:"post", "post.date | date: '%Y %b'"  %}
+        {% for yearMonth in postsByYearMonth %}
+        <h3>{{ yearMonth.name }}</h3>
         <ul>
-            {% for post in paginator.posts %}
+            {% for post in site.posts %}
             <li>
                 <h3><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
                 {% if post.summary %}
@@ -14,22 +16,7 @@
             </li>
             {% endfor %}
         </ul>
-        <!-- Pagination links -->
-        <div class="pagination">
-            {% if paginator.previous_page %}
-            <a href="{{ paginator.previous_page_path }}" class="previous">Previous</a>
-            {% else %}
-            <span class="previous">Previous</span>
-            {% endif %}
-            <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
-            {% if paginator.next_page %}
-            <a href="{{ paginator.next_page_path }}" class="next">Next</a>
-            {% else %}
-            <span class="next ">Next</span>
-            {% endif %}
-        </div>
-
-        {% include footer.html %}
+        {% endfor %}
         <style type="text/css">
          ul li h3 {
              margin: 0.2em;

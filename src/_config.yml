@@ -28,9 +28,7 @@ theme: minima
 gems:
   - jekyll-feed
   - jekyll-org-mode-converter
-  - jekyll-paginate
 exclude:
   - Gemfile
   - Gemfile.lock
 destination: ../www
-paginate: 1
