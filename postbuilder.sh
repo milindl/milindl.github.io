@@ -14,6 +14,7 @@ if [[ ! -f "$1" ]]; then
     exit 1
 fi
 
+echo "Building..."
 cd "$BLOG_HOME/src"
 bundle exec jekyll build
 cd ..
@@ -22,18 +23,22 @@ git add .
 filename=$(basename "$1")
 switch=${2:-"d"}
 commit_message="Creating post $filename"
-force=""
+force="--"
 
-
+echo "Commiting..."
 if [ "$switch" == "u" ]; then
     commit_message="Updating post $filename"
 fi
 
 if [ "$switch" == "a" ]; then
     force="-f"
+    echo "git commit -m $commit_message --amend"
     git commit -m "$commit_message" --amend
 else
+    echo "git commit -m $commit_message"
     git commit -m "$commit_message"
 fi
 
+echo "Pushing..."
+echo "git push origin master $force"
 git push origin master "$force"
