@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>
-         NPC Name Generator |
+         Please Use GDB |
         
         Milind's Writeups
    </title>
@@ -307,7 +307,7 @@
       <div class="page-navigation">
     <div class="prev-container">
      
-      <a class="prev" href="/www/2017/05/31/test_post.html">&laquo; First Post</a>
+      <a class="prev" href="/www/2017/06/01/NPC_name_generator.html">&laquo; NPC Name Generator</a>
       
     </div>
     <div class="up-container">
@@ -315,8 +315,6 @@
     </div>
     <div class="next-container">
      
-        <a class="next" href="/www/2017/09/06/Please_use_gdb.html">Please Use GDB &raquo;</a>
-        
     </div>
 </div>
 <!-- page nav styles -->
@@ -343,63 +341,169 @@
 
 
         <section class="page-wrapper">
-            <h1>NPC Name Generator</h1>
-            <h1>Introduction</h1>
-<p>Github: <a href="https://github.com/milindl/NPC-name">https://github.com/milindl/NPC-name</a></p>
-<p>This is a generator for NPC(Non-Playing Character) names. This was motivated by the book Caves of Steel, in which there&#8217;s a character called Daneel. It&#8217;s similar to Daniel, but not the same, and hence it&#8217;s a suitable, mysterious-yet-forgettable name - perfect for NPCs.</p>
-<p>The basic idea behind it is: take a &#8220;seed&#8221; name, and try to come up with names &#8220;close&#8221; to the seed name. A genetic algorithm comes up with new names in each generation, and a fitness function determines how close that is to the seed name. As soon as it&#8217;s close enough, the genetic algorithm terminates, and we can use the multitude of names generated.</p>
-<p>The names themselves must be in IPA. For further reference, read <a href="https://en.wikipedia.org/wiki/International_Phonetic_Alphabet">https://en.wikipedia.org/wiki/International_Phonetic_Alphabet</a>. It&#8217;s also worth looking at the chart of 44 IPA I&#8217;ve used, since those must be used to spell names - <a href="http://www.antimoon.com/resources/phonchart2008.pdf">http://www.antimoon.com/resources/phonchart2008.pdf</a>,</p>
-<p>I wrote this a while back, but the blog is a nice place for it.</p>
-<h1>Working</h1>
-<h2>Genetic Algorithm</h2>
-<p>The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out <a href="https://en.wikipedia.org/wiki/Genetic_algorithm">https://en.wikipedia.org/wiki/Genetic_algorithm</a> and then try doing  <a href="https://www.codewars.com/kata/binary-genetic-algorithms/javascript">https://www.codewars.com/kata/binary-genetic-algorithms/javascript</a> if they wish to.</p>
-<p>The fitness I&#8217;ve used is</p>
-<p>$$ f = \frac{\text{AlignmentScore}(\text{generated},\text{seed})}{\text{Mean}(\text{generated.length}, \text{seed.length})} $$</p>
-<p>I&#8217;ve described the AlignmentScore below.</p>
-<p><span style="text-decoration:underline;">Note</span> : In this working, the fitness can sometimes exceed the perfect fitness which is 1 (perfect fitness := when generated and seed are same).
-  This is because I&#8217;m dividing with the mean, and not the max, of the lengths(the lengths are variable).</p>
-<h2>Alignment Scoring</h2>
-<p>Each possible aligment of the sequences(generated and seed) is given a score as per the following criteria:</p>
+            <h1>Please Use GDB</h1>
+            <p><i>What this is not</i>: a complete guide to <code>gdb</code>. There are plenty of those
+  online.
+  This is primarily an opinion/experience piece on why <i>I</i> find <code>gdb</code> to be essential. There
+  is <i>some</i> usage instruction, but that is to enable anyone to follow along.</p>
+<p>The first programming language - or indeed, even the second one - I learnt
+  was not C/C++. I never had to allocate any memory manually, or face any
+  of those pesky segmentation faults. I had my friend the trusty GC with me,
+  and I was happy. I first learnt C by bits-and-pieces &#8211; in school, online, and finally, as a
+  part of my academic curriculum at IIT Kanpur. At all those times, I found it
+  to be tedious, boring, and needlessly hard to debug. I convinced myself that
+  I&#8217;d never ever use it.</p>
+<h1>Where did it all go wrong?</h1>
+<p>This section is not about my life in general, or about why I had to (finally) use C/C++. This
+  is about the question that I asked myself the most while debugging my C/C++ programs.</p>
+<p><i>Where did the segfault occur? Till where was the program successful? Where did it all go wrong?</i></p>
+<pre class="src" lang="C">
+void incrementPtrIncreaseValue(int **p, int n) {
+  *p = (*p) + n;
+  *p += 1;
+}
+
+int main() {
+  int *x = (int *)malloc(sizeof(int) * 20);
+  for (int i = 0; i &lt; 20; i++) x[i] = i;
+  int *ptr = x;
+  for (int i = 0; i &lt; 20; i++) {
+    incrementPtrIncreaseValue(&amp;ptr, 0);
+    printf(&quot;%d &quot;, *(ptr - 1));
+  }
+  return 0;
+}
+</pre>
+<p>This is a program in which the function <code>incrementPtrIncreaseValue</code> is supposed to increment
+  the pointer passed to it, and increase the <i>value</i> stored at the pointed location by <code>n</code>. Then,
+  we make an array <code>x = {0 ... 19}</code> and loop over it, intending to increment every element.</p>
+<p>I don&#8217;t know why you&#8217;d write anything like it, but there&#8217;s more &#8211; this is incorrect. [0]</p>
+<p>To increment the pointer, <code>*p += 1</code> is (correctly) used. However, to change the value, you need
+  to use <code>**p</code>, and in this case, since we&#8217;ve used <code>*p</code>, the <i>pointer</i> is accidentally incremented by <i>n + 1</i> and the value
+  is unchanged.</p>
+<p>On an initial run, the program will work as expected - to test it out, you put <code>n = 0</code>, so you didn&#8217;t notice
+  any issues with it. However, then you decide to increment by 10, and behold the output that follows (your mileage may vary a bit):</p>
+<pre class="src">
+10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+</pre>
+<p><i>Ughh, the first element seems to be correct</i>, you think, <i>where did I go wrong?</i></p>
+<p>And to verify that your program is indeed totally and completely wrong, you replace 10 with a -2. (Again, your mileage may vary).</p>
+<pre class="src">
+segmentation fault (core dumped)  ./executable_name
+</pre>
+<p>You&#8217;d probably be thinking that this particular error is rather trivial to fix &#8211; and indeed, it is, but if there&#8217;s also a lot of other code
+  lying around, it is extremely hard to isolate the source of the error.</p>
+<p>[0] Please don&#8217;t point out that I&#8217;ve not included any standard libraries, even though it affects line numbering later. Deal with it, it&#8217;s a non-issue.</p>
+<h1><code>printf</code> and copy-paste</h1>
+<p>My old go-to method for dealing with such errors was adding a bunch of <code>printf</code> statements to the code, which would
+  typically look like this: [1]</p>
+<pre class="src" lang="C">
+printf(&quot;Reached uptill [linenum], with **ptr = %d&quot;, **ptr);
+</pre>
+<p>These would be littered in huge numbers around the lines I was suspicious of. Often, I would need to add these
+  manually, since the content of the <code>printf</code> statements would often depend on the statement preceding it.</p>
+<p>I think that anyone can understand why this is tedious, and why I perceived it as being difficult. I would often rewrite
+  the whole code instead of trying to debug a segfault.</p>
+<p>[1] Observant readers will note that the code below is not well suited for cases where there is a crash, like a segfault,
+  because <code>printf</code> may cause the output to be &#8216;buffered&#8217; unless <code>fflush(stdout)</code> is called or a <code>\n</code> is encountered. I&#8217;ve kept it like
+  this deliberately since I often had troubles with this when I was starting off.</p>
+<h1>Enter <code>gdb</code></h1>
+<p>To actually use <code>gdb</code>, you need to compile your program with &#8216;debug symbols&#8217;. Without those, <code>gdb</code> cannot be very effective.
+  This is because there&#8217;s a lot of information that&#8217;s lost while compiling, for instance, what memory location corresponds
+  to what variable, and what line number in your source file corresponds to the code running in the executable.</p>
+<pre class="src" lang="bash">
+$ gcc -g faultycode.c -o executable_name
+</pre>
+<p>The <code>-g</code> flag takes care of the debug symbols. I also recommend that <a href="https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html">optimizations</a> be minimized during the compilation using the
+  <code>-O0</code> or <code>Og</code> flag [2], since the compiler often decides that certain statements, like <code>x = x</code> do not have any side effects, or certain variables
+  are not needed (all those convenience variables we make to improve clarity of our code), and also <a href="https://en.wikipedia.org/wiki/Inline_function">inlines</a> some functions. So, you can use
+  either of the following statements.</p>
+<pre class="src" lang="bash">
+$ gcc -g -O0 faultycode.c -o executable_name
+$ gcc -g -Og faultycode.c -o executable_name
+</pre>
+<p>And now, you&#8217;re ready to start <code>gdb</code>.</p>
+<pre class="src" lang="bash">
+$ gdb ./executable_name
+</pre>
+<p>[2] In certain cases, you might encounter an issue that is present <i>only</i> in the optimized version, and the unoptimized version
+  works fine. In such a case, this will not hold. I&#8217;ve never been a victim of this, however, I&#8217;ve often been a victim of the
+  <code>$n = &lt;optimized out&gt;</code> message which is printed out when a variable has been deemed unworthy by the compiler, so I stick to my
+  idea of using the unoptimizing flags.</p>
+<h1><code>break faultycode.c:11</code></h1>
+<p>What I do after this point is use something called a breakpoint. It&#8217;s exactly what it sounds like - you can tell
+  the program to stop executing when you encounter a particular line or function, and then you can</p>
 <ol>
-  <li>1 point for match</li>
-  <li>x points for mismatch</li>
-  <li>A penalty &Delta; for gaps
-    <p>x is decided by how similar sounding the alphabet in the first sequence is to the second one.</p>
-    <p>For example, the mismatch (au, Ou) has a higher score than (t, s), since it makes a similar sound.
-      The complete list of scores can be found in the comparison matrix, a 44x44 matrix that provides the key to mismatch scores.</p>
-    <p>The alignment score that is the best amongst all possible alignment scores is returned by AlignmentScore.</p>
-    <p>The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices(<a href="https://en.wikipedia.org/wiki/Point_accepted_mutation">https://en.wikipedia.org/wiki/Point_accepted_mutation</a>), a system that tells us how likely a protien is to change from one form to another over time. I&#8217;ve tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.</p>
-    <p>The 44 rows/cols of the matrix represent IPAs, and if we want to see how similar IPA1 is to IPA2, we can simply go to the row corresponding to IPA1 and the col corresponding to IPA2 and look at its value.</p>
-    <p>The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up <a href="https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm">https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm</a> for an exact description of the algorithm.</p>
-  </li>
+  <li>Execute program line-by-line, to find out exactly <i>where did it all go wrong</i></li>
+  <li>Print values of any symbol in range</li>
+  <li>Print the stack trace</li>
 </ol>
-<h1>Illustration</h1>
-<p>Seed name: d ei v i d (DAVID)</p>
-<p>Generated names:</p>
-<ul>
-  <li>d ei o: i d (DAOUID) (DAY - OO - EE - D)</li>
-  <li>d ei v i TH (DAVITH)</li>
-  <li>d ei v TH (DAVTH) (pretty much useless)</li>
-  <li>d ei v i e:(r) (DAVIER)</li>
-  <li>TH ei v i (THAYVI) (TH as in THIN)</li>
-</ul>
-<p>Clearly, not all of them are useable, but they&#8217;re not useless either.</p>
-<h1>Justification and Future Work</h1>
-<h2>Justification for Techniques Used</h2>
-<p>I wanted to implement a GA properly, and I am interested in sequence alignment, so this seemed like a great opportunity. I could alternatively made substitution tables and then substituted in the original (ie approach it from the other side).</p>
-<p>This would have probably been faster, but it would&#8217;ve lacked the feel of the language somehow changing. Though I didn&#8217;t base the comparison off the actual evolution of the language, it could possibly be done by not making the comparison matrix symmetric (to model the flow of time) and by basing the data off actual fact :)</p>
-<h2>Future Work</h2>
-<ol>
-  <li>Base off actual data (comparison matrix improvements)</li>
-  <li>Make the alignment score dependant on the <i>neighbouring</i> letters as well. Some letters tend to be in pairs, and that&#8217;s ignored here.</li>
-</ol>
+<p>And a lot more! But I&#8217;ll focus on the first and the second one.</p>
+<p>Breakpoints can be set by line numbers, function names, and <a href="ftp://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_28.html#SEC29">a lot more.</a> Let&#8217;s set a breakpoint on the 11<sup>th</sup> line of faultycode.c,
+  and then start the program execution using <code>run</code> (assume <code>n</code> = 10 for this example).</p>
+<pre class="src" lang="shell">
+(gdb) break faultycode.c:11
+Breakpoint 1 at 0xXXX: file faultycode.c, line 11.
+(gdb) run
+Breakpoint 1, main () at faultycode.c:11
+11	    printf(&quot;%d &quot;, *(ptr - 1));
+</pre>
+<p>Now that the breakpoint has been set, you can print anything.</p>
+<pre class="src" lang="shell">
+(gdb) print *(ptr - 1)
+$n = 10
+(gdb) print *(ptr)
+$n = 11
+</pre>
+<p>The <code>ptr</code> should be pointing to <code>x[1]</code> at this moment, and the value should be 1. The value at <code>x[0]</code> or <code>ptr - 1</code> should
+  be 10. On printing <code>*(ptr - 1)</code>, we realize that the value is indeed 10, but printing <code>*ptr</code>, we get 11, instead of the 1 that
+  we expect. Is the pointer wrong somehow? Let&#8217;s see, it <code>ptr - 1</code> should be the same as <code>x</code>.</p>
+<pre class="src" lang="shell">
+(gdb) print x
+$n = (int *) 0x555555756010
+(gdb) print ptr
+$n = (int *) 0x55555575603c
+</pre>
+<p>Subtracting, we see that they differ by 40! How is that possible? <code>sizeof(int)</code> is 4, so the pointer hex values differing by 40 means that
+  they point to integers which are 40/4 = 10 memory locations apart. Indeed, when you print <code>ptr - 11</code> you see that it is the same as <code>x</code>.</p>
+<p>So, it seems like we have discovered the root of our problem: <code>ptr</code> is incremented incorrectly somewhere. But, <code>incrementPtrIncreaseValue</code> is the
+  only place where we actually change that. So, let&#8217;s step through that code and try to find out what is wrong. First, let&#8217;s set a breakpoint on
+  <code>incrementPtrIncreaseValue</code>.</p>
+<pre class="src" lang="shell">
+(gdb) break incrementPtrIncreaseValue
+Breakpoint 2 at 0xXXX: file faultycode.c, line 2.
+(gdb) continue
+</pre>
+<p>Recall that currently, we are at a breakpoint, so program execution is halted. To start the program from where we stopped, <code>continue</code> is used.
+  Soon enough, the program will stop at the function, helpfully printing the parameters passed to it.</p>
+<pre class="src" lang="shell">
+Breakpoint 2, incrementPtrIncreaseValue (p=0x7fffffffe608, n=10) at faultycode.c:2
+2	  *p = (*p) + n;
+</pre>
+<p>I&#8217;m sure that the problem will be clear enough at this point, so that you can correct it. If not, then the following commands will help:</p>
+<pre class="src">
+(gdb) print *p
+$n = (int *) 0x55555575603c
+(gdb) step
+3	  *p += 1;
+(gdb) print *p
+$n = (int *) 0x555555756064
+</pre>
+<p>I&#8217;ll explain what happens - you stop <i>before</i> executing the 2<sup>nd</sup> line, and you print the value of <code>*p</code>. Using <code>step</code> [3] causes the execution
+  of one line, so line 2 is executed, and you stop <i>before</i> the execution of line 3. So, you can print <code>*p</code> after the execution of line 2,
+  and the error becomes clear on comparing the addresses. This step was not required in this case, since the error was easy to see, but
+  you might be calling some function in line 2, which might have a long and convoluted way of modifying <code>p</code>. In those cases, <code>step</code> ping through
+  the code is much easier.</p>
+<p>[3] In this case, <code>next</code> would be equivalent to <code>step</code> but the <a href="https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html">difference is really worth knowing.</a></p>
+<h1>Go, Debug</h1>
+<p>I repeat again, <b>this is not a guide</b>. Please see <a href="https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html">this comprehensive guide</a>, or use <code>(gdb) help</code> while inside <code>gdb</code>, or <a href="https://web.stanford.edu/class/cs107/guide_gdb.html">this short guide.</a></p>
 
         </section>
 
       <div class="page-navigation">
     <div class="prev-container">
      
-      <a class="prev" href="/www/2017/05/31/test_post.html">&laquo; First Post</a>
+      <a class="prev" href="/www/2017/06/01/NPC_name_generator.html">&laquo; NPC Name Generator</a>
       
     </div>
     <div class="up-container">
@@ -407,8 +511,6 @@
     </div>
     <div class="next-container">
      
-        <a class="next" href="/www/2017/09/06/Please_use_gdb.html">Please Use GDB &raquo;</a>
-        
     </div>
 </div>
 <!-- page nav styles -->

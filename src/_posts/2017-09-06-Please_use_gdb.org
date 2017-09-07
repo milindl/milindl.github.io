@@ -1,0 +1,210 @@
+---
+layout: default
+title: Please Use GDB
+summary: An opinion/experience post on why ~gdb~ is highly recommended to everyone.
+---
+
+/What this is not/: a complete guide to ~gdb~. There are plenty of those
+online.
+This is primarily an opinion/experience piece on why /I/ find ~gdb~ to be essential. There
+is /some/ usage instruction, but that is to enable anyone to follow along.
+
+The first programming language - or indeed, even the second one - I learnt
+was not C/C++. I never had to allocate any memory manually, or face any
+of those pesky segmentation faults. I had my friend the trusty GC with me,
+and I was happy. I first learnt C by bits-and-pieces -- in school, online, and finally, as a
+part of my academic curriculum at IIT Kanpur. At all those times, I found it
+to be tedious, boring, and needlessly hard to debug. I convinced myself that
+I'd never ever use it.
+
+* Where did it all go wrong?
+
+This section is not about my life in general, or about why I had to (finally) use C/C++. This
+is about the question that I asked myself the most while debugging my C/C++ programs.
+
+/Where did the segfault occur? Till where was the program successful? Where did it all go wrong?/
+
+#+NAME: faultycode.c
+#+BEGIN_SRC C++
+void incrementPtrIncreaseValue(int **p, int n) {
+  *p = (*p) + n;
+  *p += 1;
+}
+
+int main() {
+  int *x = (int *)malloc(sizeof(int) * 20);
+  for (int i = 0; i < 20; i++) x[i] = i;
+  int *ptr = x;
+  for (int i = 0; i < 20; i++) {
+    incrementPtrIncreaseValue(&ptr, 0);
+    printf("%d ", *(ptr - 1));
+  }
+  return 0;
+}
+#+END_SRC
+
+This is a program in which the function ~incrementPtrIncreaseValue~ is supposed to increment
+the pointer passed to it, and increase the /value/ stored at the pointed location by ~n~. Then,
+we make an array ~x = {0 ... 19}~ and loop over it, intending to increment every element.
+
+I don't know why you'd write anything like it, but there's more -- this is incorrect. [0]
+
+To increment the pointer, ~*p += 1~ is (correctly) used. However, to change the value, you need
+to use ~**p~, and in this case, since we've used ~*p~, the /pointer/ is accidentally incremented by /n + 1/ and the value
+is unchanged.
+
+On an initial run, the program will work as expected - to test it out, you put ~n = 0~, so you didn't notice
+any issues with it. However, then you decide to increment by 10, and behold the output that follows (your mileage may vary a bit):
+
+#+BEGIN_SRC
+10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+#+END_SRC
+
+/Ughh, the first element seems to be correct/, you think, /where did I go wrong?/
+
+And to verify that your program is indeed totally and completely wrong, you replace 10 with a -2. (Again, your mileage may vary).
+
+#+BEGIN_SRC
+segmentation fault (core dumped)  ./executable_name
+#+END_SRC
+
+You'd probably be thinking that this particular error is rather trivial to fix -- and indeed, it is, but if there's also a lot of other code
+lying around, it is extremely hard to isolate the source of the error.
+
+[0] Please don't point out that I've not included any standard libraries, even though it affects line numbering later. Deal with it, it's a non-issue.
+
+* ~printf~ and copy-paste
+
+My old go-to method for dealing with such errors was adding a bunch of ~printf~ statements to the code, which would
+typically look like this: [1]
+
+#+BEGIN_SRC C++
+printf("Reached uptill [linenum], with **ptr = %d", **ptr);
+#+END_SRC
+
+These would be littered in huge numbers around the lines I was suspicious of. Often, I would need to add these
+manually, since the content of the ~printf~ statements would often depend on the statement preceding it.
+
+I think that anyone can understand why this is tedious, and why I perceived it as being difficult. I would often rewrite
+the whole code instead of trying to debug a segfault.
+
+[1] Observant readers will note that the code below is not well suited for cases where there is a crash, like a segfault,
+because ~printf~ may cause the output to be 'buffered' unless ~fflush(stdout)~ is called or a ~\n~ is encountered. I've kept it like
+this deliberately since I often had troubles with this when I was starting off.
+
+* Enter ~gdb~
+
+To actually use ~gdb~, you need to compile your program with 'debug symbols'. Without those, ~gdb~ cannot be very effective.
+This is because there's a lot of information that's lost while compiling, for instance, what memory location corresponds
+to what variable, and what line number in your source file corresponds to the code running in the executable.
+
+#+BEGIN_SRC bash
+$ gcc -g faultycode.c -o executable_name
+#+END_SRC
+
+The ~-g~ flag takes care of the debug symbols. I also recommend that [[https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html][optimizations]] be minimized during the compilation using the
+~-O0~ or ~Og~ flag [2], since the compiler often decides that certain statements, like ~x = x~ do not have any side effects, or certain variables
+are not needed (all those convenience variables we make to improve clarity of our code), and also [[https://en.wikipedia.org/wiki/Inline_function][inlines]] some functions. So, you can use
+either of the following statements.
+
+#+BEGIN_SRC bash
+$ gcc -g -O0 faultycode.c -o executable_name
+$ gcc -g -Og faultycode.c -o executable_name
+#+END_SRC
+
+And now, you're ready to start ~gdb~.
+
+#+BEGIN_SRC bash
+$ gdb ./executable_name
+#+END_SRC
+
+[2] In certain cases, you might encounter an issue that is present /only/ in the optimized version, and the unoptimized version
+works fine. In such a case, this will not hold. I've never been a victim of this, however, I've often been a victim of the
+~$n = <optimized out>~ message which is printed out when a variable has been deemed unworthy by the compiler, so I stick to my
+idea of using the unoptimizing flags.
+
+* ~break faultycode.c:11~
+
+What I do after this point is use something called a breakpoint. It's exactly what it sounds like - you can tell
+the program to stop executing when you encounter a particular line or function, and then you can
+
+1. Execute program line-by-line, to find out exactly /where did it all go wrong/
+2. Print values of any symbol in range
+3. Print the stack trace
+
+And a lot more! But I'll focus on the first and the second one.
+
+Breakpoints can be set by line numbers, function names, and [[ftp://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_28.html#SEC29][a lot more.]] Let's set a breakpoint on the 11^{th} line of faultycode.c,
+and then start the program execution using ~run~ (assume ~n~ = 10 for this example).
+
+#+BEGIN_SRC shell
+(gdb) break faultycode.c:11
+Breakpoint 1 at 0xXXX: file faultycode.c, line 11.
+(gdb) run
+Breakpoint 1, main () at faultycode.c:11
+11	    printf("%d ", *(ptr - 1));
+#+END_SRC
+
+Now that the breakpoint has been set, you can print anything.
+
+#+BEGIN_SRC shell
+(gdb) print *(ptr - 1)
+$n = 10
+(gdb) print *(ptr)
+$n = 11
+#+END_SRC
+
+The ~ptr~ should be pointing to ~x[1]~ at this moment, and the value should be 1. The value at ~x[0]~ or ~ptr - 1~ should
+be 10. On printing ~*(ptr - 1)~, we realize that the value is indeed 10, but printing ~*ptr~, we get 11, instead of the 1 that
+we expect. Is the pointer wrong somehow? Let's see, it ~ptr - 1~ should be the same as ~x~.
+
+#+BEGIN_SRC shell
+(gdb) print x
+$n = (int *) 0x555555756010
+(gdb) print ptr
+$n = (int *) 0x55555575603c
+#+END_SRC
+
+Subtracting, we see that they differ by 40! How is that possible? ~sizeof(int)~ is 4, so the pointer hex values differing by 40 means that
+they point to integers which are 40/4 = 10 memory locations apart. Indeed, when you print ~ptr - 11~ you see that it is the same as ~x~.
+
+So, it seems like we have discovered the root of our problem: ~ptr~ is incremented incorrectly somewhere. But, ~incrementPtrIncreaseValue~ is the
+only place where we actually change that. So, let's step through that code and try to find out what is wrong. First, let's set a breakpoint on
+~incrementPtrIncreaseValue~.
+
+#+BEGIN_SRC shell
+(gdb) break incrementPtrIncreaseValue
+Breakpoint 2 at 0xXXX: file faultycode.c, line 2.
+(gdb) continue
+#+END_SRC
+
+Recall that currently, we are at a breakpoint, so program execution is halted. To start the program from where we stopped, ~continue~ is used.
+Soon enough, the program will stop at the function, helpfully printing the parameters passed to it.
+
+#+BEGIN_SRC shell
+Breakpoint 2, incrementPtrIncreaseValue (p=0x7fffffffe608, n=10) at faultycode.c:2
+2	  *p = (*p) + n;
+#+END_SRC
+
+I'm sure that the problem will be clear enough at this point, so that you can correct it. If not, then the following commands will help:
+
+#+BEGIN_SRC
+(gdb) print *p
+$n = (int *) 0x55555575603c
+(gdb) step
+3	  *p += 1;
+(gdb) print *p
+$n = (int *) 0x555555756064
+#+END_SRC
+
+I'll explain what happens - you stop /before/ executing the 2^{nd} line, and you print the value of ~*p~. Using ~step~ [3] causes the execution
+of one line, so line 2 is executed, and you stop /before/ the execution of line 3. So, you can print ~*p~ after the execution of line 2,
+and the error becomes clear on comparing the addresses. This step was not required in this case, since the error was easy to see, but
+you might be calling some function in line 2, which might have a long and convoluted way of modifying ~p~. In those cases, ~step~ ping through
+the code is much easier.
+
+[3] In this case, ~next~ would be equivalent to ~step~ but the [[https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html][difference is really worth knowing.]]
+
+* Go, Debug
+
+I repeat again, *this is not a guide*. Please see [[https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html][this comprehensive guide]], or use ~(gdb) help~ while inside ~gdb~, or [[https://web.stanford.edu/class/cs107/guide_gdb.html][this short guide.]]

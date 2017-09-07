@@ -1,5 +1,159 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2017-06-02T15:29:52+05:30</updated><id>/www/</id><title type="html">Milind’s Writeups</title><subtitle>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
-</subtitle><entry><title type="html">NPC Name Generator</title><link href="/www/2017/06/01/NPC_name_generator.html" rel="alternate" type="text/html" title="NPC Name Generator" /><published>2017-06-01T00:00:00+05:30</published><updated>2017-06-01T00:00:00+05:30</updated><id>/www/2017/06/01/NPC_name_generator</id><content type="html" xml:base="/www/2017/06/01/NPC_name_generator.html">&lt;h1&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2017-09-07T16:15:52+05:30</updated><id>/www/</id><title type="html">Milind’s Writeups</title><subtitle>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
+</subtitle><entry><title type="html">Please Use GDB</title><link href="/www/2017/09/06/Please_use_gdb.html" rel="alternate" type="text/html" title="Please Use GDB" /><published>2017-09-06T00:00:00+05:30</published><updated>2017-09-06T00:00:00+05:30</updated><id>/www/2017/09/06/Please_use_gdb</id><content type="html" xml:base="/www/2017/09/06/Please_use_gdb.html">&lt;p&gt;&lt;i&gt;What this is not&lt;/i&gt;: a complete guide to &lt;code&gt;gdb&lt;/code&gt;. There are plenty of those
+  online.
+  This is primarily an opinion/experience piece on why &lt;i&gt;I&lt;/i&gt; find &lt;code&gt;gdb&lt;/code&gt; to be essential. There
+  is &lt;i&gt;some&lt;/i&gt; usage instruction, but that is to enable anyone to follow along.&lt;/p&gt;
+&lt;p&gt;The first programming language - or indeed, even the second one - I learnt
+  was not C/C++. I never had to allocate any memory manually, or face any
+  of those pesky segmentation faults. I had my friend the trusty GC with me,
+  and I was happy. I first learnt C by bits-and-pieces &amp;#8211; in school, online, and finally, as a
+  part of my academic curriculum at IIT Kanpur. At all those times, I found it
+  to be tedious, boring, and needlessly hard to debug. I convinced myself that
+  I&amp;#8217;d never ever use it.&lt;/p&gt;
+&lt;h1&gt;Where did it all go wrong?&lt;/h1&gt;
+&lt;p&gt;This section is not about my life in general, or about why I had to (finally) use C/C++. This
+  is about the question that I asked myself the most while debugging my C/C++ programs.&lt;/p&gt;
+&lt;p&gt;&lt;i&gt;Where did the segfault occur? Till where was the program successful? Where did it all go wrong?&lt;/i&gt;&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;C&quot;&gt;
+void incrementPtrIncreaseValue(int **p, int n) {
+  *p = (*p) + n;
+  *p += 1;
+}
+
+int main() {
+  int *x = (int *)malloc(sizeof(int) * 20);
+  for (int i = 0; i &amp;lt; 20; i++) x[i] = i;
+  int *ptr = x;
+  for (int i = 0; i &amp;lt; 20; i++) {
+    incrementPtrIncreaseValue(&amp;amp;ptr, 0);
+    printf(&amp;quot;%d &amp;quot;, *(ptr - 1));
+  }
+  return 0;
+}
+&lt;/pre&gt;
+&lt;p&gt;This is a program in which the function &lt;code&gt;incrementPtrIncreaseValue&lt;/code&gt; is supposed to increment
+  the pointer passed to it, and increase the &lt;i&gt;value&lt;/i&gt; stored at the pointed location by &lt;code&gt;n&lt;/code&gt;. Then,
+  we make an array &lt;code&gt;x = {0 ... 19}&lt;/code&gt; and loop over it, intending to increment every element.&lt;/p&gt;
+&lt;p&gt;I don&amp;#8217;t know why you&amp;#8217;d write anything like it, but there&amp;#8217;s more &amp;#8211; this is incorrect. [0]&lt;/p&gt;
+&lt;p&gt;To increment the pointer, &lt;code&gt;*p += 1&lt;/code&gt; is (correctly) used. However, to change the value, you need
+  to use &lt;code&gt;**p&lt;/code&gt;, and in this case, since we&amp;#8217;ve used &lt;code&gt;*p&lt;/code&gt;, the &lt;i&gt;pointer&lt;/i&gt; is accidentally incremented by &lt;i&gt;n + 1&lt;/i&gt; and the value
+  is unchanged.&lt;/p&gt;
+&lt;p&gt;On an initial run, the program will work as expected - to test it out, you put &lt;code&gt;n = 0&lt;/code&gt;, so you didn&amp;#8217;t notice
+  any issues with it. However, then you decide to increment by 10, and behold the output that follows (your mileage may vary a bit):&lt;/p&gt;
+&lt;pre class=&quot;src&quot;&gt;
+10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+&lt;/pre&gt;
+&lt;p&gt;&lt;i&gt;Ughh, the first element seems to be correct&lt;/i&gt;, you think, &lt;i&gt;where did I go wrong?&lt;/i&gt;&lt;/p&gt;
+&lt;p&gt;And to verify that your program is indeed totally and completely wrong, you replace 10 with a -2. (Again, your mileage may vary).&lt;/p&gt;
+&lt;pre class=&quot;src&quot;&gt;
+segmentation fault (core dumped)  ./executable_name
+&lt;/pre&gt;
+&lt;p&gt;You&amp;#8217;d probably be thinking that this particular error is rather trivial to fix &amp;#8211; and indeed, it is, but if there&amp;#8217;s also a lot of other code
+  lying around, it is extremely hard to isolate the source of the error.&lt;/p&gt;
+&lt;p&gt;[0] Please don&amp;#8217;t point out that I&amp;#8217;ve not included any standard libraries, even though it affects line numbering later. Deal with it, it&amp;#8217;s a non-issue.&lt;/p&gt;
+&lt;h1&gt;&lt;code&gt;printf&lt;/code&gt; and copy-paste&lt;/h1&gt;
+&lt;p&gt;My old go-to method for dealing with such errors was adding a bunch of &lt;code&gt;printf&lt;/code&gt; statements to the code, which would
+  typically look like this: [1]&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;C&quot;&gt;
+printf(&amp;quot;Reached uptill [linenum], with **ptr = %d&amp;quot;, **ptr);
+&lt;/pre&gt;
+&lt;p&gt;These would be littered in huge numbers around the lines I was suspicious of. Often, I would need to add these
+  manually, since the content of the &lt;code&gt;printf&lt;/code&gt; statements would often depend on the statement preceding it.&lt;/p&gt;
+&lt;p&gt;I think that anyone can understand why this is tedious, and why I perceived it as being difficult. I would often rewrite
+  the whole code instead of trying to debug a segfault.&lt;/p&gt;
+&lt;p&gt;[1] Observant readers will note that the code below is not well suited for cases where there is a crash, like a segfault,
+  because &lt;code&gt;printf&lt;/code&gt; may cause the output to be &amp;#8216;buffered&amp;#8217; unless &lt;code&gt;fflush(stdout)&lt;/code&gt; is called or a &lt;code&gt;\n&lt;/code&gt; is encountered. I&amp;#8217;ve kept it like
+  this deliberately since I often had troubles with this when I was starting off.&lt;/p&gt;
+&lt;h1&gt;Enter &lt;code&gt;gdb&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;To actually use &lt;code&gt;gdb&lt;/code&gt;, you need to compile your program with &amp;#8216;debug symbols&amp;#8217;. Without those, &lt;code&gt;gdb&lt;/code&gt; cannot be very effective.
+  This is because there&amp;#8217;s a lot of information that&amp;#8217;s lost while compiling, for instance, what memory location corresponds
+  to what variable, and what line number in your source file corresponds to the code running in the executable.&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;bash&quot;&gt;
+$ gcc -g faultycode.c -o executable_name
+&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;-g&lt;/code&gt; flag takes care of the debug symbols. I also recommend that &lt;a href=&quot;https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html&quot;&gt;optimizations&lt;/a&gt; be minimized during the compilation using the
+  &lt;code&gt;-O0&lt;/code&gt; or &lt;code&gt;Og&lt;/code&gt; flag [2], since the compiler often decides that certain statements, like &lt;code&gt;x = x&lt;/code&gt; do not have any side effects, or certain variables
+  are not needed (all those convenience variables we make to improve clarity of our code), and also &lt;a href=&quot;https://en.wikipedia.org/wiki/Inline_function&quot;&gt;inlines&lt;/a&gt; some functions. So, you can use
+  either of the following statements.&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;bash&quot;&gt;
+$ gcc -g -O0 faultycode.c -o executable_name
+$ gcc -g -Og faultycode.c -o executable_name
+&lt;/pre&gt;
+&lt;p&gt;And now, you&amp;#8217;re ready to start &lt;code&gt;gdb&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;bash&quot;&gt;
+$ gdb ./executable_name
+&lt;/pre&gt;
+&lt;p&gt;[2] In certain cases, you might encounter an issue that is present &lt;i&gt;only&lt;/i&gt; in the optimized version, and the unoptimized version
+  works fine. In such a case, this will not hold. I&amp;#8217;ve never been a victim of this, however, I&amp;#8217;ve often been a victim of the
+  &lt;code&gt;$n = &amp;lt;optimized out&amp;gt;&lt;/code&gt; message which is printed out when a variable has been deemed unworthy by the compiler, so I stick to my
+  idea of using the unoptimizing flags.&lt;/p&gt;
+&lt;h1&gt;&lt;code&gt;break faultycode.c:11&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;What I do after this point is use something called a breakpoint. It&amp;#8217;s exactly what it sounds like - you can tell
+  the program to stop executing when you encounter a particular line or function, and then you can&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Execute program line-by-line, to find out exactly &lt;i&gt;where did it all go wrong&lt;/i&gt;&lt;/li&gt;
+  &lt;li&gt;Print values of any symbol in range&lt;/li&gt;
+  &lt;li&gt;Print the stack trace&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;And a lot more! But I&amp;#8217;ll focus on the first and the second one.&lt;/p&gt;
+&lt;p&gt;Breakpoints can be set by line numbers, function names, and &lt;a href=&quot;ftp://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_28.html#SEC29&quot;&gt;a lot more.&lt;/a&gt; Let&amp;#8217;s set a breakpoint on the 11&lt;sup&gt;th&lt;/sup&gt; line of faultycode.c,
+  and then start the program execution using &lt;code&gt;run&lt;/code&gt; (assume &lt;code&gt;n&lt;/code&gt; = 10 for this example).&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
+(gdb) break faultycode.c:11
+Breakpoint 1 at 0xXXX: file faultycode.c, line 11.
+(gdb) run
+Breakpoint 1, main () at faultycode.c:11
+11	    printf(&amp;quot;%d &amp;quot;, *(ptr - 1));
+&lt;/pre&gt;
+&lt;p&gt;Now that the breakpoint has been set, you can print anything.&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
+(gdb) print *(ptr - 1)
+$n = 10
+(gdb) print *(ptr)
+$n = 11
+&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;ptr&lt;/code&gt; should be pointing to &lt;code&gt;x[1]&lt;/code&gt; at this moment, and the value should be 1. The value at &lt;code&gt;x[0]&lt;/code&gt; or &lt;code&gt;ptr - 1&lt;/code&gt; should
+  be 10. On printing &lt;code&gt;*(ptr - 1)&lt;/code&gt;, we realize that the value is indeed 10, but printing &lt;code&gt;*ptr&lt;/code&gt;, we get 11, instead of the 1 that
+  we expect. Is the pointer wrong somehow? Let&amp;#8217;s see, it &lt;code&gt;ptr - 1&lt;/code&gt; should be the same as &lt;code&gt;x&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
+(gdb) print x
+$n = (int *) 0x555555756010
+(gdb) print ptr
+$n = (int *) 0x55555575603c
+&lt;/pre&gt;
+&lt;p&gt;Subtracting, we see that they differ by 40! How is that possible? &lt;code&gt;sizeof(int)&lt;/code&gt; is 4, so the pointer hex values differing by 40 means that
+  they point to integers which are 40/4 = 10 memory locations apart. Indeed, when you print &lt;code&gt;ptr - 11&lt;/code&gt; you see that it is the same as &lt;code&gt;x&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So, it seems like we have discovered the root of our problem: &lt;code&gt;ptr&lt;/code&gt; is incremented incorrectly somewhere. But, &lt;code&gt;incrementPtrIncreaseValue&lt;/code&gt; is the
+  only place where we actually change that. So, let&amp;#8217;s step through that code and try to find out what is wrong. First, let&amp;#8217;s set a breakpoint on
+  &lt;code&gt;incrementPtrIncreaseValue&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
+(gdb) break incrementPtrIncreaseValue
+Breakpoint 2 at 0xXXX: file faultycode.c, line 2.
+(gdb) continue
+&lt;/pre&gt;
+&lt;p&gt;Recall that currently, we are at a breakpoint, so program execution is halted. To start the program from where we stopped, &lt;code&gt;continue&lt;/code&gt; is used.
+  Soon enough, the program will stop at the function, helpfully printing the parameters passed to it.&lt;/p&gt;
+&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
+Breakpoint 2, incrementPtrIncreaseValue (p=0x7fffffffe608, n=10) at faultycode.c:2
+2	  *p = (*p) + n;
+&lt;/pre&gt;
+&lt;p&gt;I&amp;#8217;m sure that the problem will be clear enough at this point, so that you can correct it. If not, then the following commands will help:&lt;/p&gt;
+&lt;pre class=&quot;src&quot;&gt;
+(gdb) print *p
+$n = (int *) 0x55555575603c
+(gdb) step
+3	  *p += 1;
+(gdb) print *p
+$n = (int *) 0x555555756064
+&lt;/pre&gt;
+&lt;p&gt;I&amp;#8217;ll explain what happens - you stop &lt;i&gt;before&lt;/i&gt; executing the 2&lt;sup&gt;nd&lt;/sup&gt; line, and you print the value of &lt;code&gt;*p&lt;/code&gt;. Using &lt;code&gt;step&lt;/code&gt; [3] causes the execution
+  of one line, so line 2 is executed, and you stop &lt;i&gt;before&lt;/i&gt; the execution of line 3. So, you can print &lt;code&gt;*p&lt;/code&gt; after the execution of line 2,
+  and the error becomes clear on comparing the addresses. This step was not required in this case, since the error was easy to see, but
+  you might be calling some function in line 2, which might have a long and convoluted way of modifying &lt;code&gt;p&lt;/code&gt;. In those cases, &lt;code&gt;step&lt;/code&gt; ping through
+  the code is much easier.&lt;/p&gt;
+&lt;p&gt;[3] In this case, &lt;code&gt;next&lt;/code&gt; would be equivalent to &lt;code&gt;step&lt;/code&gt; but the &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;difference is really worth knowing.&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;Go, Debug&lt;/h1&gt;
+&lt;p&gt;I repeat again, &lt;b&gt;this is not a guide&lt;/b&gt;. Please see &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;this comprehensive guide&lt;/a&gt;, or use &lt;code&gt;(gdb) help&lt;/code&gt; while inside &lt;code&gt;gdb&lt;/code&gt;, or &lt;a href=&quot;https://web.stanford.edu/class/cs107/guide_gdb.html&quot;&gt;this short guide.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">What this is not: a complete guide to gdb. There are plenty of those online. This is primarily an opinion/experience piece on why I find gdb to be essential. There is some usage instruction, but that is to enable anyone to follow along.</summary></entry><entry><title type="html">NPC Name Generator</title><link href="/www/2017/06/01/NPC_name_generator.html" rel="alternate" type="text/html" title="NPC Name Generator" /><published>2017-06-01T00:00:00+05:30</published><updated>2017-06-01T00:00:00+05:30</updated><id>/www/2017/06/01/NPC_name_generator</id><content type="html" xml:base="/www/2017/06/01/NPC_name_generator.html">&lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;Github: &lt;a href=&quot;https://github.com/milindl/NPC-name&quot;&gt;https://github.com/milindl/NPC-name&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;This is a generator for NPC(Non-Playing Character) names. This was motivated by the book Caves of Steel, in which there&amp;#8217;s a character called Daneel. It&amp;#8217;s similar to Daniel, but not the same, and hence it&amp;#8217;s a suitable, mysterious-yet-forgettable name - perfect for NPCs.&lt;/p&gt;
 &lt;p&gt;The basic idea behind it is: take a &amp;#8220;seed&amp;#8221; name, and try to come up with names &amp;#8220;close&amp;#8221; to the seed name. A genetic algorithm comes up with new names in each generation, and a fitness function determines how close that is to the seed name. As soon as it&amp;#8217;s close enough, the genetic algorithm terminates, and we can use the multitude of names generated.&lt;/p&gt;

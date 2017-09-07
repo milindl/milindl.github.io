@@ -17,7 +17,7 @@ summary: I made a generator to create names for NPCs which have a realistic 'mou
 
    I wrote this a while back, but the blog is a nice place for it.
 
-* Working  
+* Working
 ** Genetic Algorithm
     
     The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out [[https://en.wikipedia.org/wiki/Genetic_algorithm]] and then try doing  [[https://www.codewars.com/kata/binary-genetic-algorithms/javascript]] if they wish to.
