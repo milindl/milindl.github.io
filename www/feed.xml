@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2017-10-04T15:18:11+05:30</updated><id>/www/</id><title type="html">Milind’s Writeups</title><subtitle>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2018-04-01T19:37:07+05:30</updated><id>/www/</id><title type="html">Milind’s Writeups</title><subtitle>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
 </subtitle><entry><title type="html">Please Use GDB</title><link href="/www/2017/09/06/Please_use_gdb.html" rel="alternate" type="text/html" title="Please Use GDB" /><published>2017-09-06T00:00:00+05:30</published><updated>2017-09-06T00:00:00+05:30</updated><id>/www/2017/09/06/Please_use_gdb</id><content type="html" xml:base="/www/2017/09/06/Please_use_gdb.html">&lt;p&gt;&lt;i&gt;What this is not&lt;/i&gt;: a complete guide to &lt;code&gt;gdb&lt;/code&gt;. There are plenty of those
   online.
   This is primarily an opinion/experience piece on why &lt;i&gt;I&lt;/i&gt; find &lt;code&gt;gdb&lt;/code&gt; to be essential. There
@@ -153,38 +153,80 @@ $n = (int *) 0x555555756064
   the code is much easier.&lt;/p&gt;
 &lt;p&gt;[3] In this case, &lt;code&gt;next&lt;/code&gt; would be equivalent to &lt;code&gt;step&lt;/code&gt; but the &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;difference is really worth knowing.&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;Go, Debug&lt;/h1&gt;
-&lt;p&gt;I repeat again, &lt;b&gt;this is not a guide&lt;/b&gt;. Please see &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;this comprehensive guide&lt;/a&gt;, or use &lt;code&gt;(gdb) help&lt;/code&gt; while inside &lt;code&gt;gdb&lt;/code&gt;, or &lt;a href=&quot;https://web.stanford.edu/class/cs107/guide_gdb.html&quot;&gt;this short guide.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">What this is not: a complete guide to gdb. There are plenty of those online. This is primarily an opinion/experience piece on why I find gdb to be essential. There is some usage instruction, but that is to enable anyone to follow along.</summary></entry><entry><title type="html">NPC Name Generator</title><link href="/www/2017/06/01/NPC_name_generator.html" rel="alternate" type="text/html" title="NPC Name Generator" /><published>2017-06-01T00:00:00+05:30</published><updated>2017-06-01T00:00:00+05:30</updated><id>/www/2017/06/01/NPC_name_generator</id><content type="html" xml:base="/www/2017/06/01/NPC_name_generator.html">&lt;h1&gt;Introduction&lt;/h1&gt;
-&lt;p&gt;Github: &lt;a href=&quot;https://github.com/milindl/NPC-name&quot;&gt;https://github.com/milindl/NPC-name&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;This is a generator for NPC(Non-Playing Character) names. This was motivated by the book Caves of Steel, in which there&amp;#8217;s a character called Daneel. It&amp;#8217;s similar to Daniel, but not the same, and hence it&amp;#8217;s a suitable, mysterious-yet-forgettable name - perfect for NPCs.&lt;/p&gt;
-&lt;p&gt;The basic idea behind it is: take a &amp;#8220;seed&amp;#8221; name, and try to come up with names &amp;#8220;close&amp;#8221; to the seed name. A genetic algorithm comes up with new names in each generation, and a fitness function determines how close that is to the seed name. As soon as it&amp;#8217;s close enough, the genetic algorithm terminates, and we can use the multitude of names generated.&lt;/p&gt;
-&lt;p&gt;The names themselves must be in IPA. For further reference, read &lt;a href=&quot;https://en.wikipedia.org/wiki/International_Phonetic_Alphabet&quot;&gt;https://en.wikipedia.org/wiki/International_Phonetic_Alphabet&lt;/a&gt;. It&amp;#8217;s also worth looking at the chart of 44 IPA I&amp;#8217;ve used, since those must be used to spell names - &lt;a href=&quot;http://www.antimoon.com/resources/phonchart2008.pdf&quot;&gt;http://www.antimoon.com/resources/phonchart2008.pdf&lt;/a&gt;,&lt;/p&gt;
-&lt;p&gt;I wrote this a while back, but the blog is a nice place for it.&lt;/p&gt;
-&lt;h1&gt;Working&lt;/h1&gt;
-&lt;h2&gt;Genetic Algorithm&lt;/h2&gt;
-&lt;p&gt;The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out &lt;a href=&quot;https://en.wikipedia.org/wiki/Genetic_algorithm&quot;&gt;https://en.wikipedia.org/wiki/Genetic_algorithm&lt;/a&gt; and then try doing  &lt;a href=&quot;https://www.codewars.com/kata/binary-genetic-algorithms/javascript&quot;&gt;https://www.codewars.com/kata/binary-genetic-algorithms/javascript&lt;/a&gt; if they wish to.&lt;/p&gt;
-&lt;p&gt;The fitness I&amp;#8217;ve used is&lt;/p&gt;
-&lt;p&gt;$$ f = \frac{\text{AlignmentScore}(\text{generated},\text{seed})}{\text{Mean}(\text{generated.length}, \text{seed.length})} $$&lt;/p&gt;
-&lt;p&gt;I&amp;#8217;ve described the AlignmentScore below.&lt;/p&gt;
-&lt;p&gt;&lt;span style=&quot;text-decoration:underline;&quot;&gt;Note&lt;/span&gt; : In this working, the fitness can sometimes exceed the perfect fitness which is 1 (perfect fitness := when generated and seed are same).
-  This is because I&amp;#8217;m dividing with the mean, and not the max, of the lengths(the lengths are variable).&lt;/p&gt;
-&lt;h2&gt;Alignment Scoring&lt;/h2&gt;
-&lt;p&gt;Each possible aligment of the sequences(generated and seed) is given a score as per the following criteria:&lt;/p&gt;
+&lt;p&gt;I repeat again, &lt;b&gt;this is not a guide&lt;/b&gt;. Please see &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;this comprehensive guide&lt;/a&gt;, or use &lt;code&gt;(gdb) help&lt;/code&gt; while inside &lt;code&gt;gdb&lt;/code&gt;, or &lt;a href=&quot;https://web.stanford.edu/class/cs107/guide_gdb.html&quot;&gt;this short guide.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">What this is not: a complete guide to gdb. There are plenty of those online. This is primarily an opinion/experience piece on why I find gdb to be essential. There is some usage instruction, but that is to enable anyone to follow along.</summary></entry><entry><title type="html">NPC Name Generator</title><link href="/www/2017/06/01/NPC_name_generator.html" rel="alternate" type="text/html" title="NPC Name Generator" /><published>2017-06-01T00:00:00+05:30</published><updated>2017-06-01T00:00:00+05:30</updated><id>/www/2017/06/01/NPC_name_generator</id><content type="html" xml:base="/www/2017/06/01/NPC_name_generator.html">&lt;h1&gt;On NPC Names&lt;/h1&gt;
+&lt;p&gt;An NPC, or a non-playing character in a computer or role-playing game is a character controlled by the game, who helps set the scene and progress the story. I&amp;#8217;ll be addressing NPCs which are a part of sci-fi or fantasy games. In my opinion, these NPCs should have names that deviate enough from regular, run-of-the-mill, &amp;#8220;Earthly&amp;#8221; names, and impart an unfamiliar and exotic feel to the setting. However, they should not have names which are contrived and do not have a realistic mouthfeel, like &amp;#8220;Tchu&amp;#8217;quixthal&amp;#8221;, or be too generic, like &amp;#8220;The Wise Sage&amp;#8221;.&lt;/p&gt;
+&lt;p&gt;Diablo 2 is a game that gets it right in my opinion. Some examples are: Gheed, Akara, Charsi, Jerhyn.&lt;/p&gt;
+&lt;p&gt;Now, the challenge here is to come up with names which are different, yet similar to &amp;#8220;Earthly&amp;#8221; names. My idea is to take a &amp;#8220;seed&amp;#8221; name, and generate variants of it to come up with NPC names. The inspiration for this derives from Isaac Asimov&amp;#8217;s &lt;i&gt;Caves of Steel&lt;/i&gt;, in which there is a character called &lt;i&gt;Daneel&lt;/i&gt;, whose name is similar enough to &lt;i&gt;Daniel&lt;/i&gt;, but yet exotic enough (for my tastes, at least!).&lt;/p&gt;
+&lt;h1&gt;Generating Random Names&lt;/h1&gt;
+&lt;p&gt;It&amp;#8217;s easy to generate random names of a particular length. Let&amp;#8217;s assume that it&amp;#8217;s also possible to rate names based on their closeness to another name. This rating is called the &lt;b&gt;score&lt;/b&gt;.  Using these two facts, and something called a genetic algorithm, I can come up with generated NPC names, and here&amp;#8217;s how:&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;1 point for match&lt;/li&gt;
-  &lt;li&gt;x points for mismatch&lt;/li&gt;
-  &lt;li&gt;A penalty &amp;Delta; for gaps
-    &lt;p&gt;x is decided by how similar sounding the alphabet in the first sequence is to the second one.&lt;/p&gt;
-    &lt;p&gt;For example, the mismatch (au, Ou) has a higher score than (t, s), since it makes a similar sound.
-      The complete list of scores can be found in the comparison matrix, a 44x44 matrix that provides the key to mismatch scores.&lt;/p&gt;
-    &lt;p&gt;The alignment score that is the best amongst all possible alignment scores is returned by AlignmentScore.&lt;/p&gt;
-    &lt;p&gt;The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices(&lt;a href=&quot;https://en.wikipedia.org/wiki/Point_accepted_mutation&quot;&gt;https://en.wikipedia.org/wiki/Point_accepted_mutation&lt;/a&gt;), a system that tells us how likely a protien is to change from one form to another over time. I&amp;#8217;ve tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.&lt;/p&gt;
-    &lt;p&gt;The 44 rows/cols of the matrix represent IPAs, and if we want to see how similar IPA1 is to IPA2, we can simply go to the row corresponding to IPA1 and the col corresponding to IPA2 and look at its value.&lt;/p&gt;
-    &lt;p&gt;The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up &lt;a href=&quot;https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm&quot;&gt;https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm&lt;/a&gt; for an exact description of the algorithm.&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;Decide a &amp;#8220;seed&amp;#8221; name manually.&lt;/li&gt;
+  &lt;li&gt;Generate a large number of random names with lengths close to the &amp;#8220;seed&amp;#8221; name.&lt;/li&gt;
+  &lt;li&gt;Apply the genetic algorithm (explained below) to create a new list of names from the previous list.&lt;/li&gt;
+  &lt;li&gt;Find out the &lt;b&gt;score&lt;/b&gt; of all names in the list to the &amp;#8220;seed&amp;#8221; name.&lt;/li&gt;
+  &lt;li&gt;If we have a sufficient number of names whose &lt;b&gt;score&lt;/b&gt; is (say) above 0.9, print them, else repeat from 3.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h1&gt;Illustration&lt;/h1&gt;
-&lt;p&gt;Seed name: d ei v i d (DAVID)&lt;/p&gt;
-&lt;p&gt;Generated names:&lt;/p&gt;
+&lt;p&gt;Given a list, a genetic algorithm drives us towards another list, which has an overall &lt;b&gt;score&lt;/b&gt; better than the current one, and it is the actual &amp;#8220;magic&amp;#8221; behind how the names are generated.&lt;/p&gt;
+&lt;p&gt;A genetic algorithm is based loosely on how evolution works: the survival of the fittest.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Each animal in a &lt;b&gt;population&lt;/b&gt; has a &lt;b&gt;fitness&lt;/b&gt;.&lt;/li&gt;
+  &lt;li&gt;Two (or more) animals can &lt;b&gt;mate&lt;/b&gt; to produce an offspring. Higher &lt;b&gt;fitness&lt;/b&gt; means that there is a higher chance that the animal will survive and &lt;b&gt;mate&lt;/b&gt;.&lt;/li&gt;
+  &lt;li&gt;Each animal can also have a &lt;b&gt;mutation&lt;/b&gt; while producing offspring. This &lt;b&gt;mutation&lt;/b&gt; can be both good or bad in terms of how it affects the &lt;b&gt;fitness&lt;/b&gt; of the offspring.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In our scenario, the correspondence is such:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;b&gt;population&lt;/b&gt; is the list of  names at the current moment.&lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;mating&lt;/b&gt; is the process of generating a new population of the same size based on the current one. The actual mating process is based on combination of names. For instance, &amp;#8220;milind&amp;#8221; and &amp;#8220;luthra&amp;#8221; can generate &amp;#8220;mi-thra&amp;#8221;, &amp;#8220;mil-hra&amp;#8221;, &amp;#8220;mili-ra&amp;#8221; and so on: the prefix of the generated name comes from the first name, and the suffix comes from the second name. If a name has a larger score, then it will contribute to more prefixes and suffixes in the new population.&lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;mutation&lt;/b&gt; is the process of random changes in a name, so &amp;#8220;milind&amp;#8221; can mutate to &amp;#8220;nilind&amp;#8221;. This is necessary because we can sometimes reach a &amp;#8220;plateau&amp;#8221; where no amount of mating can produce a better score. The probability of mutation is very low.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you are interested in genetic algorithms and their implementation, &lt;a href=&quot;https://en.wikipedia.org/wiki/Genetic_algorithm&quot;&gt;read the wikipedia page&lt;/a&gt; and then try doing &lt;a href=&quot;https://www.codewars.com/kata/binary-genetic-algorithms/javascript&quot;&gt;this question&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;Scoring Random Names&lt;/h1&gt;
+&lt;p&gt;We&amp;#8217;ve used &lt;b&gt;score&lt;/b&gt; above as a measure of how close a name is to the &amp;#8220;seed&amp;#8221; name, but we&amp;#8217;ve not discussed how to actually do this. A usual way of doing this is counting changes (number of additions, alterations and deletions needed to make the names same). I&amp;#8217;ve done something similar, using &lt;i&gt;alignments&lt;/i&gt;. I generate all the &lt;i&gt;alignments&lt;/i&gt; of the two names and to score the best one.&lt;/p&gt;
+&lt;p&gt;What is an alignment?&lt;/p&gt;
+&lt;pre class=&quot;src&quot;&gt;
+m i l i n d
++ | | | | |
+n i l i n d
+&lt;/pre&gt;
+&lt;p&gt;The alignment above attempts to align &amp;#8220;milind&amp;#8221; to &amp;#8220;nilind&amp;#8221;. The &lt;code&gt;|&lt;/code&gt; denotes a &lt;i&gt;match&lt;/i&gt;, while the &lt;code&gt;+&lt;/code&gt; denotes a &lt;i&gt;mismatch&lt;/i&gt;. A &lt;i&gt;mismatch&lt;/i&gt; roughly hints towards an alteration.&lt;/p&gt;
+&lt;pre class=&quot;src&quot;&gt;
+m i l i n d
+| _ | | | |
+m   l i n d
+&lt;/pre&gt;
+&lt;p&gt;The alignment above attempts to align &amp;#8220;milind&amp;#8221; to &amp;#8220;mlind&amp;#8221;. The &lt;code&gt;|&lt;/code&gt; denotes a &lt;i&gt;match&lt;/i&gt;, while the &lt;code&gt;_&lt;/code&gt; denotes a &lt;i&gt;gap&lt;/i&gt;. A &lt;i&gt;gap&lt;/i&gt; roughly hints towards an addition or a deletion.&lt;/p&gt;
+&lt;p&gt;There can be many alignments for any two names. For instance, for &amp;#8220;mil&amp;#8221; and &amp;#8220;lul&amp;#8221;, all the three alignments given below are valid.&lt;/p&gt;
+&lt;pre class=&quot;src&quot;&gt;
+m i l
+_ _ | _ _
+    l u l
+score: -3
+
+m i l
++ + |
+l u l
+score: 2
+
+m i l
+_ + + _
+  l u l
+score: -1
+&lt;/pre&gt;
+&lt;p&gt;Each of these alignments is assigned a score. For each &lt;i&gt;match&lt;/i&gt;, an alignment is given 1 point. For each &lt;i&gt;mismatch&lt;/i&gt;, an alignment is given 0.5 points, and for each &lt;i&gt;gap&lt;/i&gt;, an alignment is given -1 points. We calculate the score for all possible alignments, and choose the one with the best score. In the case above, it would be the second one.&lt;/p&gt;
+&lt;p&gt;This method causes longer names to have better scores than smaller ones, because they simply have more matches. To remove the effect of name length on the score, we divide the best score by the length of the name.&lt;/p&gt;
+&lt;p&gt;Thus, the score we talked about is defined as:&lt;/p&gt;
+&lt;p&gt;$$ score = \frac{BestAlignmentScore(\text{name},\text{seed})}{\text{name}.length} $$&lt;/p&gt;
+&lt;p&gt;Actually - that is not one hundred percent true, I&amp;#8217;ve simplified it a bit above.&lt;/p&gt;
+&lt;p&gt;Firstly, I don&amp;#8217;t match names written down using the letters of the English alphabet. Instead, I use names written down using the &lt;a href=&quot;https://en.wikipedia.org/wiki/International_Phonetic_Alphabet&quot;&gt;International Phonetic Alphabet&lt;/a&gt; (IPA). In the English alphabet, the way we &lt;i&gt;write&lt;/i&gt; something and the way we &lt;i&gt;say&lt;/i&gt; it is quite different, and I aim to produce similar &lt;i&gt;sounding&lt;/i&gt; names. The IPA provides an easy, comprehensive way to represent how a word should be spoken out loud. At the same time, the IPA uses a rather large set of symbols, like &amp;#8216;ɳ&amp;#8217; and &amp;#8216;θ&amp;#8217; and so on. I have used ASCII representations instead, as described in this &lt;a href=&quot;http://www.antimoon.com/resources/phonchart2008.pdf&quot;&gt;very useful document&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Secondly, the &lt;i&gt;mismatch&lt;/i&gt; score is not a constant. Consider the two mismatches - (&lt;i&gt;a:&lt;/i&gt; as in &lt;i&gt;arm&lt;/i&gt;, &lt;i&gt;e:&lt;/i&gt; as in &lt;i&gt;turn&lt;/i&gt;) and (&lt;i&gt;a:&lt;/i&gt; as in arm, and &lt;i&gt;l&lt;/i&gt; as in &lt;i&gt;leg&lt;/i&gt;). The first pair consists of similar sounding vowels, while the second pair consists of one vowel and one consonant, which sound very different. Thus, the first pair gets a larger &lt;i&gt;mismatch&lt;/i&gt; score. The entire scheme of mismatch scores is decided by &lt;a href=&quot;https://docs.google.com/spreadsheets/d/1ZIsQbYccrpIz5iQXhU5XiEqSQkMNy888-vJO9vlvE98/edit?usp%3Dsharing&quot;&gt;this grid I came up  with&lt;/a&gt;. The gap score is also smaller, around -0.15 by default.&lt;/p&gt;
+&lt;p&gt;Thirdly, the name and the &amp;#8220;seed&amp;#8221; might have different lengths. In particular, for a &amp;#8220;seed&amp;#8221; of length 6, the name might be 5-7 characters long. Thus, the final score definition actually looks somewhat different:&lt;/p&gt;
+&lt;p&gt;$$ score = \frac{BestAlignmentScore(\text{name},\text{seed})}{Mean(\text{name}.length, \text{seed}.length)} $$&lt;/p&gt;
+&lt;p&gt;The algorithm that finds the best alignment is mostly the same as the &lt;a href=&quot;Needleman-Wunsch%20Algorithm&quot;&gt;Needleman-Wunsch Algorithm&lt;/a&gt;, which is used to align protein sequences.&lt;/p&gt;
+&lt;h1&gt;NPC-Name Generator in Action&lt;/h1&gt;
+&lt;p&gt;This is an example run of the generator.
+  Please feel free to try it out yourself at https://github.com/milindl/NPC-name&lt;/p&gt;
+&lt;p&gt;Seed name: d ei v i d (DAVID)
+  Generated names:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;d ei o: i d (DAOUID) (DAY - OO - EE - D)&lt;/li&gt;
   &lt;li&gt;d ei v i TH (DAVITH)&lt;/li&gt;
@@ -193,15 +235,13 @@ $n = (int *) 0x555555756064
   &lt;li&gt;TH ei v i (THAYVI) (TH as in THIN)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Clearly, not all of them are useable, but they&amp;#8217;re not useless either.&lt;/p&gt;
-&lt;h1&gt;Justification and Future Work&lt;/h1&gt;
-&lt;h2&gt;Justification for Techniques Used&lt;/h2&gt;
-&lt;p&gt;I wanted to implement a GA properly, and I am interested in sequence alignment, so this seemed like a great opportunity. I could alternatively made substitution tables and then substituted in the original (ie approach it from the other side).&lt;/p&gt;
-&lt;p&gt;This would have probably been faster, but it would&amp;#8217;ve lacked the feel of the language somehow changing. Though I didn&amp;#8217;t base the comparison off the actual evolution of the language, it could possibly be done by not making the comparison matrix symmetric (to model the flow of time) and by basing the data off actual fact :)&lt;/p&gt;
-&lt;h2&gt;Future Work&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;Base off actual data (comparison matrix improvements)&lt;/li&gt;
-  &lt;li&gt;Make the alignment score dependant on the &lt;i&gt;neighbouring&lt;/i&gt; letters as well. Some letters tend to be in pairs, and that&amp;#8217;s ignored here.&lt;/li&gt;
-&lt;/ol&gt;</content><author><name></name></author><summary type="html">Introduction Github: https://github.com/milindl/NPC-name</summary></entry><entry><title type="html">First Post</title><link href="/www/2017/05/31/test_post.html" rel="alternate" type="text/html" title="First Post" /><published>2017-05-31T00:00:00+05:30</published><updated>2017-05-31T00:00:00+05:30</updated><id>/www/2017/05/31/test_post</id><content type="html" xml:base="/www/2017/05/31/test_post.html">&lt;p&gt;The main purpose of this post was to check styles and make sure that org-mode is working,
+&lt;h1&gt;Future Work&lt;/h1&gt;
+&lt;h2&gt;Asymmetric Grid&lt;/h2&gt;
+&lt;p&gt;Currently, the grid used to score mismatches is symmetric. Thus, &lt;i&gt;a:&lt;/i&gt; turning to &lt;i&gt;e:&lt;/i&gt; is as likely as &lt;i&gt;e:&lt;/i&gt; turning to &lt;i&gt;a:&lt;/i&gt;. However, by changing this, I can model the flow of time. For instance, I want to model that over time, both the &lt;i&gt;ʒ&lt;/i&gt; (as in &lt;i&gt;pleaSure&lt;/i&gt;) and &lt;i&gt;z&lt;/i&gt; (as in &lt;i&gt;zoo&lt;/i&gt;) sounds being replaced with &lt;i&gt;z&lt;/i&gt;. In this case, I can make it more likely for &lt;i&gt;ʒ&lt;/i&gt; sound to change into &lt;i&gt;z&lt;/i&gt; than the other way around. This way, I can probably look at how a word changes over time.&lt;/p&gt;
+&lt;h2&gt;Accurate Grid&lt;/h2&gt;
+&lt;p&gt;Right now, the grid is based on me saying some words and comparing how similar they sound to me. Instead, I should base my grid &lt;a href=&quot;https://en.wikipedia.org/wiki/International_Phonetic_Alphabet#Consonants&quot;&gt;off this chart&lt;/a&gt;, which could help me describe the closeness of two symbols based on phonetic properties.&lt;/p&gt;
+&lt;h2&gt;Neighboring-Letter Based Alignment&lt;/h2&gt;
+&lt;p&gt;Certain letters occur together more often than not, and my program does not take that into account while computing alignment scoring. Thus, the alignment scores should depend not only on the letter, but also its neighboring letters.&lt;/p&gt;</content><author><name></name></author><summary type="html">On NPC Names</summary></entry><entry><title type="html">First Post</title><link href="/www/2017/05/31/test_post.html" rel="alternate" type="text/html" title="First Post" /><published>2017-05-31T00:00:00+05:30</published><updated>2017-05-31T00:00:00+05:30</updated><id>/www/2017/05/31/test_post</id><content type="html" xml:base="/www/2017/05/31/test_post.html">&lt;p&gt;The main purpose of this post was to check styles and make sure that org-mode is working,
   and any scripts I use for posting run alright.&lt;/p&gt;
 &lt;p&gt;It has no real content, so there&amp;#8217;s no point to reading it, but thanks anyway.&lt;/p&gt;
 &lt;p&gt;If you&amp;#8217;re really interested in knowing who gets the Iron Throne, I would bet my dollar on the bastards.&lt;/p&gt;</content><author><name></name></author><summary type="html">The main purpose of this post was to check styles and make sure that org-mode is working, and any scripts I use for posting run alright.</summary></entry></feed>

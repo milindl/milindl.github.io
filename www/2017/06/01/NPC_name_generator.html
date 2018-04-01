@@ -231,14 +231,14 @@
      displayAlign: "center",
      displayIndent: "0em",
 
-     "HTML-CSS": { scale: 100,
+     "HTML-CSS": { scale: 150,
                    linebreaks: { automatic: "false" },
                    webFont: "TeX"
      },
-     SVG: {scale: 100,
+     SVG: {scale: 150,
            linebreaks: { automatic: "false" },
            font: "TeX"},
-     NativeMML: {scale: 100},
+     NativeMML: {scale: 150},
      TeX: { equationNumbers: {autoNumber: "AMS"},
             MultLineWidth: "85%",
             TagSide: "right",
@@ -344,38 +344,80 @@
 
         <section class="page-wrapper">
             <h1>NPC Name Generator</h1>
-            <h1>Introduction</h1>
-<p>Github: <a href="https://github.com/milindl/NPC-name">https://github.com/milindl/NPC-name</a></p>
-<p>This is a generator for NPC(Non-Playing Character) names. This was motivated by the book Caves of Steel, in which there&#8217;s a character called Daneel. It&#8217;s similar to Daniel, but not the same, and hence it&#8217;s a suitable, mysterious-yet-forgettable name - perfect for NPCs.</p>
-<p>The basic idea behind it is: take a &#8220;seed&#8221; name, and try to come up with names &#8220;close&#8221; to the seed name. A genetic algorithm comes up with new names in each generation, and a fitness function determines how close that is to the seed name. As soon as it&#8217;s close enough, the genetic algorithm terminates, and we can use the multitude of names generated.</p>
-<p>The names themselves must be in IPA. For further reference, read <a href="https://en.wikipedia.org/wiki/International_Phonetic_Alphabet">https://en.wikipedia.org/wiki/International_Phonetic_Alphabet</a>. It&#8217;s also worth looking at the chart of 44 IPA I&#8217;ve used, since those must be used to spell names - <a href="http://www.antimoon.com/resources/phonchart2008.pdf">http://www.antimoon.com/resources/phonchart2008.pdf</a>,</p>
-<p>I wrote this a while back, but the blog is a nice place for it.</p>
-<h1>Working</h1>
-<h2>Genetic Algorithm</h2>
-<p>The GA used is pretty straightforward. Except for not being binary, the implementation is not that different from usual. Interested readers can check out <a href="https://en.wikipedia.org/wiki/Genetic_algorithm">https://en.wikipedia.org/wiki/Genetic_algorithm</a> and then try doing  <a href="https://www.codewars.com/kata/binary-genetic-algorithms/javascript">https://www.codewars.com/kata/binary-genetic-algorithms/javascript</a> if they wish to.</p>
-<p>The fitness I&#8217;ve used is</p>
-<p>$$ f = \frac{\text{AlignmentScore}(\text{generated},\text{seed})}{\text{Mean}(\text{generated.length}, \text{seed.length})} $$</p>
-<p>I&#8217;ve described the AlignmentScore below.</p>
-<p><span style="text-decoration:underline;">Note</span> : In this working, the fitness can sometimes exceed the perfect fitness which is 1 (perfect fitness := when generated and seed are same).
-  This is because I&#8217;m dividing with the mean, and not the max, of the lengths(the lengths are variable).</p>
-<h2>Alignment Scoring</h2>
-<p>Each possible aligment of the sequences(generated and seed) is given a score as per the following criteria:</p>
+            <h1>On NPC Names</h1>
+<p>An NPC, or a non-playing character in a computer or role-playing game is a character controlled by the game, who helps set the scene and progress the story. I&#8217;ll be addressing NPCs which are a part of sci-fi or fantasy games. In my opinion, these NPCs should have names that deviate enough from regular, run-of-the-mill, &#8220;Earthly&#8221; names, and impart an unfamiliar and exotic feel to the setting. However, they should not have names which are contrived and do not have a realistic mouthfeel, like &#8220;Tchu&#8217;quixthal&#8221;, or be too generic, like &#8220;The Wise Sage&#8221;.</p>
+<p>Diablo 2 is a game that gets it right in my opinion. Some examples are: Gheed, Akara, Charsi, Jerhyn.</p>
+<p>Now, the challenge here is to come up with names which are different, yet similar to &#8220;Earthly&#8221; names. My idea is to take a &#8220;seed&#8221; name, and generate variants of it to come up with NPC names. The inspiration for this derives from Isaac Asimov&#8217;s <i>Caves of Steel</i>, in which there is a character called <i>Daneel</i>, whose name is similar enough to <i>Daniel</i>, but yet exotic enough (for my tastes, at least!).</p>
+<h1>Generating Random Names</h1>
+<p>It&#8217;s easy to generate random names of a particular length. Let&#8217;s assume that it&#8217;s also possible to rate names based on their closeness to another name. This rating is called the <b>score</b>.  Using these two facts, and something called a genetic algorithm, I can come up with generated NPC names, and here&#8217;s how:</p>
 <ol>
-  <li>1 point for match</li>
-  <li>x points for mismatch</li>
-  <li>A penalty &Delta; for gaps
-    <p>x is decided by how similar sounding the alphabet in the first sequence is to the second one.</p>
-    <p>For example, the mismatch (au, Ou) has a higher score than (t, s), since it makes a similar sound.
-      The complete list of scores can be found in the comparison matrix, a 44x44 matrix that provides the key to mismatch scores.</p>
-    <p>The alignment score that is the best amongst all possible alignment scores is returned by AlignmentScore.</p>
-    <p>The idea for this was motivated by sequence matching of protiens. The idea for a comparison matrix came from PAM matrices(<a href="https://en.wikipedia.org/wiki/Point_accepted_mutation">https://en.wikipedia.org/wiki/Point_accepted_mutation</a>), a system that tells us how likely a protien is to change from one form to another over time. I&#8217;ve tried to do the same to some extent(looking up the evolution of language), but got bored and as of now, comparison matrix is simply based on how similar the phonetics sound.</p>
-    <p>The 44 rows/cols of the matrix represent IPAs, and if we want to see how similar IPA1 is to IPA2, we can simply go to the row corresponding to IPA1 and the col corresponding to IPA2 and look at its value.</p>
-    <p>The actual algorithm itself is similar to finding pairwise sequence alignments between protien sequences. Look up <a href="https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm">https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm</a> for an exact description of the algorithm.</p>
-  </li>
+  <li>Decide a &#8220;seed&#8221; name manually.</li>
+  <li>Generate a large number of random names with lengths close to the &#8220;seed&#8221; name.</li>
+  <li>Apply the genetic algorithm (explained below) to create a new list of names from the previous list.</li>
+  <li>Find out the <b>score</b> of all names in the list to the &#8220;seed&#8221; name.</li>
+  <li>If we have a sufficient number of names whose <b>score</b> is (say) above 0.9, print them, else repeat from 3.</li>
 </ol>
-<h1>Illustration</h1>
-<p>Seed name: d ei v i d (DAVID)</p>
-<p>Generated names:</p>
+<p>Given a list, a genetic algorithm drives us towards another list, which has an overall <b>score</b> better than the current one, and it is the actual &#8220;magic&#8221; behind how the names are generated.</p>
+<p>A genetic algorithm is based loosely on how evolution works: the survival of the fittest.</p>
+<ul>
+  <li>Each animal in a <b>population</b> has a <b>fitness</b>.</li>
+  <li>Two (or more) animals can <b>mate</b> to produce an offspring. Higher <b>fitness</b> means that there is a higher chance that the animal will survive and <b>mate</b>.</li>
+  <li>Each animal can also have a <b>mutation</b> while producing offspring. This <b>mutation</b> can be both good or bad in terms of how it affects the <b>fitness</b> of the offspring.</li>
+</ul>
+<p>In our scenario, the correspondence is such:</p>
+<ul>
+  <li><b>population</b> is the list of  names at the current moment.</li>
+  <li><b>mating</b> is the process of generating a new population of the same size based on the current one. The actual mating process is based on combination of names. For instance, &#8220;milind&#8221; and &#8220;luthra&#8221; can generate &#8220;mi-thra&#8221;, &#8220;mil-hra&#8221;, &#8220;mili-ra&#8221; and so on: the prefix of the generated name comes from the first name, and the suffix comes from the second name. If a name has a larger score, then it will contribute to more prefixes and suffixes in the new population.</li>
+  <li><b>mutation</b> is the process of random changes in a name, so &#8220;milind&#8221; can mutate to &#8220;nilind&#8221;. This is necessary because we can sometimes reach a &#8220;plateau&#8221; where no amount of mating can produce a better score. The probability of mutation is very low.</li>
+</ul>
+<p>If you are interested in genetic algorithms and their implementation, <a href="https://en.wikipedia.org/wiki/Genetic_algorithm">read the wikipedia page</a> and then try doing <a href="https://www.codewars.com/kata/binary-genetic-algorithms/javascript">this question</a>.</p>
+<h1>Scoring Random Names</h1>
+<p>We&#8217;ve used <b>score</b> above as a measure of how close a name is to the &#8220;seed&#8221; name, but we&#8217;ve not discussed how to actually do this. A usual way of doing this is counting changes (number of additions, alterations and deletions needed to make the names same). I&#8217;ve done something similar, using <i>alignments</i>. I generate all the <i>alignments</i> of the two names and to score the best one.</p>
+<p>What is an alignment?</p>
+<pre class="src">
+m i l i n d
++ | | | | |
+n i l i n d
+</pre>
+<p>The alignment above attempts to align &#8220;milind&#8221; to &#8220;nilind&#8221;. The <code>|</code> denotes a <i>match</i>, while the <code>+</code> denotes a <i>mismatch</i>. A <i>mismatch</i> roughly hints towards an alteration.</p>
+<pre class="src">
+m i l i n d
+| _ | | | |
+m   l i n d
+</pre>
+<p>The alignment above attempts to align &#8220;milind&#8221; to &#8220;mlind&#8221;. The <code>|</code> denotes a <i>match</i>, while the <code>_</code> denotes a <i>gap</i>. A <i>gap</i> roughly hints towards an addition or a deletion.</p>
+<p>There can be many alignments for any two names. For instance, for &#8220;mil&#8221; and &#8220;lul&#8221;, all the three alignments given below are valid.</p>
+<pre class="src">
+m i l
+_ _ | _ _
+    l u l
+score: -3
+
+m i l
++ + |
+l u l
+score: 2
+
+m i l
+_ + + _
+  l u l
+score: -1
+</pre>
+<p>Each of these alignments is assigned a score. For each <i>match</i>, an alignment is given 1 point. For each <i>mismatch</i>, an alignment is given 0.5 points, and for each <i>gap</i>, an alignment is given -1 points. We calculate the score for all possible alignments, and choose the one with the best score. In the case above, it would be the second one.</p>
+<p>This method causes longer names to have better scores than smaller ones, because they simply have more matches. To remove the effect of name length on the score, we divide the best score by the length of the name.</p>
+<p>Thus, the score we talked about is defined as:</p>
+<p>$$ score = \frac{BestAlignmentScore(\text{name},\text{seed})}{\text{name}.length} $$</p>
+<p>Actually - that is not one hundred percent true, I&#8217;ve simplified it a bit above.</p>
+<p>Firstly, I don&#8217;t match names written down using the letters of the English alphabet. Instead, I use names written down using the <a href="https://en.wikipedia.org/wiki/International_Phonetic_Alphabet">International Phonetic Alphabet</a> (IPA). In the English alphabet, the way we <i>write</i> something and the way we <i>say</i> it is quite different, and I aim to produce similar <i>sounding</i> names. The IPA provides an easy, comprehensive way to represent how a word should be spoken out loud. At the same time, the IPA uses a rather large set of symbols, like &#8216;ɳ&#8217; and &#8216;θ&#8217; and so on. I have used ASCII representations instead, as described in this <a href="http://www.antimoon.com/resources/phonchart2008.pdf">very useful document</a>.</p>
+<p>Secondly, the <i>mismatch</i> score is not a constant. Consider the two mismatches - (<i>a:</i> as in <i>arm</i>, <i>e:</i> as in <i>turn</i>) and (<i>a:</i> as in arm, and <i>l</i> as in <i>leg</i>). The first pair consists of similar sounding vowels, while the second pair consists of one vowel and one consonant, which sound very different. Thus, the first pair gets a larger <i>mismatch</i> score. The entire scheme of mismatch scores is decided by <a href="https://docs.google.com/spreadsheets/d/1ZIsQbYccrpIz5iQXhU5XiEqSQkMNy888-vJO9vlvE98/edit?usp%3Dsharing">this grid I came up  with</a>. The gap score is also smaller, around -0.15 by default.</p>
+<p>Thirdly, the name and the &#8220;seed&#8221; might have different lengths. In particular, for a &#8220;seed&#8221; of length 6, the name might be 5-7 characters long. Thus, the final score definition actually looks somewhat different:</p>
+<p>$$ score = \frac{BestAlignmentScore(\text{name},\text{seed})}{Mean(\text{name}.length, \text{seed}.length)} $$</p>
+<p>The algorithm that finds the best alignment is mostly the same as the <a href="Needleman-Wunsch%20Algorithm">Needleman-Wunsch Algorithm</a>, which is used to align protein sequences.</p>
+<h1>NPC-Name Generator in Action</h1>
+<p>This is an example run of the generator.
+  Please feel free to try it out yourself at https://github.com/milindl/NPC-name</p>
+<p>Seed name: d ei v i d (DAVID)
+  Generated names:</p>
 <ul>
   <li>d ei o: i d (DAOUID) (DAY - OO - EE - D)</li>
   <li>d ei v i TH (DAVITH)</li>
@@ -384,15 +426,13 @@
   <li>TH ei v i (THAYVI) (TH as in THIN)</li>
 </ul>
 <p>Clearly, not all of them are useable, but they&#8217;re not useless either.</p>
-<h1>Justification and Future Work</h1>
-<h2>Justification for Techniques Used</h2>
-<p>I wanted to implement a GA properly, and I am interested in sequence alignment, so this seemed like a great opportunity. I could alternatively made substitution tables and then substituted in the original (ie approach it from the other side).</p>
-<p>This would have probably been faster, but it would&#8217;ve lacked the feel of the language somehow changing. Though I didn&#8217;t base the comparison off the actual evolution of the language, it could possibly be done by not making the comparison matrix symmetric (to model the flow of time) and by basing the data off actual fact :)</p>
-<h2>Future Work</h2>
-<ol>
-  <li>Base off actual data (comparison matrix improvements)</li>
-  <li>Make the alignment score dependant on the <i>neighbouring</i> letters as well. Some letters tend to be in pairs, and that&#8217;s ignored here.</li>
-</ol>
+<h1>Future Work</h1>
+<h2>Asymmetric Grid</h2>
+<p>Currently, the grid used to score mismatches is symmetric. Thus, <i>a:</i> turning to <i>e:</i> is as likely as <i>e:</i> turning to <i>a:</i>. However, by changing this, I can model the flow of time. For instance, I want to model that over time, both the <i>ʒ</i> (as in <i>pleaSure</i>) and <i>z</i> (as in <i>zoo</i>) sounds being replaced with <i>z</i>. In this case, I can make it more likely for <i>ʒ</i> sound to change into <i>z</i> than the other way around. This way, I can probably look at how a word changes over time.</p>
+<h2>Accurate Grid</h2>
+<p>Right now, the grid is based on me saying some words and comparing how similar they sound to me. Instead, I should base my grid <a href="https://en.wikipedia.org/wiki/International_Phonetic_Alphabet#Consonants">off this chart</a>, which could help me describe the closeness of two symbols based on phonetic properties.</p>
+<h2>Neighboring-Letter Based Alignment</h2>
+<p>Certain letters occur together more often than not, and my program does not take that into account while computing alignment scoring. Thus, the alignment scores should depend not only on the letter, but also its neighboring letters.</p>
 
         </section>
 
