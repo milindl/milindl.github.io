@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- 2017-06-01 Thu 00:20 -->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+         Visualizing my browsing history |
+        
+        Milind's Writeups
+   </title>
+   <style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+ .title  { text-align: center;
+     margin-bottom: .2em; }
+ .subtitle { text-align: center;
+     font-size: medium;
+     font-weight: bold;
+     margin-top:0; }
+ .todo   { font-family: monospace; color: red; }
+ .done   { font-family: monospace; color: green; }
+ .priority { font-family: monospace; color: orange; }
+ .tag    { background-color: #eee; font-family: monospace;
+     padding: 2px; font-size: 80%; font-weight: normal; }
+ .timestamp { color: #bebebe; }
+ .timestamp-kwd { color: #5f9ea0; }
+ .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+ .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+ .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+ .underline { text-decoration: underline; }
+ #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+ p.verse { margin-left: 3%; }
+ pre {
+     border: 1px solid #ccc;
+     box-shadow: 3px 3px 3px #eee;
+     padding: 8pt;
+     font-family: monospace;
+     overflow: auto;
+     margin: 1.2em;
+ }
+ pre.src {
+     position: relative;
+     overflow: visible;
+     padding-top: 1.2em;
+ }
+ pre.src:before {
+     display: none;
+     position: absolute;
+     background-color: white;
+     top: -10px;
+     right: 10px;
+     padding: 3px;
+     border: 1px solid black;
+ }
+ pre.src:hover:before { display: inline;}
+ /* Languages per Org manual */
+ pre.src-asymptote:before { content: 'Asymptote'; }
+ pre.src-awk:before { content: 'Awk'; }
+ pre.src-C:before { content: 'C'; }
+ /* pre.src-C++ doesn't work in CSS */
+ pre.src-clojure:before { content: 'Clojure'; }
+ pre.src-css:before { content: 'CSS'; }
+ pre.src-D:before { content: 'D'; }
+ pre.src-ditaa:before { content: 'ditaa'; }
+ pre.src-dot:before { content: 'Graphviz'; }
+ pre.src-calc:before { content: 'Emacs Calc'; }
+ pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+ pre.src-fortran:before { content: 'Fortran'; }
+ pre.src-gnuplot:before { content: 'gnuplot'; }
+ pre.src-haskell:before { content: 'Haskell'; }
+ pre.src-java:before { content: 'Java'; }
+ pre.src-js:before { content: 'Javascript'; }
+ pre.src-latex:before { content: 'LaTeX'; }
+ pre.src-ledger:before { content: 'Ledger'; }
+ pre.src-lisp:before { content: 'Lisp'; }
+ pre.src-lilypond:before { content: 'Lilypond'; }
+ pre.src-lua:before { content: 'Lua'; }
+ pre.src-matlab:before { content: 'MATLAB'; }
+ pre.src-mscgen:before { content: 'Mscgen'; }
+ pre.src-ocaml:before { content: 'Objective Caml'; }
+ pre.src-octave:before { content: 'Octave'; }
+ pre.src-org:before { content: 'Org mode'; }
+ pre.src-oz:before { content: 'OZ'; }
+ pre.src-plantuml:before { content: 'Plantuml'; }
+ pre.src-processing:before { content: 'Processing.js'; }
+ pre.src-python:before { content: 'Python'; }
+ pre.src-R:before { content: 'R'; }
+ pre.src-ruby:before { content: 'Ruby'; }
+ pre.src-sass:before { content: 'Sass'; }
+ pre.src-scheme:before { content: 'Scheme'; }
+ pre.src-screen:before { content: 'Gnu Screen'; }
+ pre.src-sed:before { content: 'Sed'; }
+ pre.src-sh:before { content: 'shell'; }
+ pre.src-sql:before { content: 'SQL'; }
+ pre.src-sqlite:before { content: 'SQLite'; }
+ /* additional languages in org.el's org-babel-load-languages alist */
+ pre.src-forth:before { content: 'Forth'; }
+ pre.src-io:before { content: 'IO'; }
+ pre.src-J:before { content: 'J'; }
+ pre.src-makefile:before { content: 'Makefile'; }
+ pre.src-maxima:before { content: 'Maxima'; }
+ pre.src-perl:before { content: 'Perl'; }
+ pre.src-picolisp:before { content: 'Pico Lisp'; }
+ pre.src-scala:before { content: 'Scala'; }
+ pre.src-shell:before { content: 'Shell Script'; }
+ pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+ /* additional language identifiers per "defun org-babel-execute"
+    in ob-*.el */
+ pre.src-cpp:before  { content: 'C++'; }
+ pre.src-abc:before  { content: 'ABC'; }
+ pre.src-coq:before  { content: 'Coq'; }
+ pre.src-groovy:before  { content: 'Groovy'; }
+ /* additional language identifiers from org-babel-shell-names in
+    ob-shell.el: ob-shell is the only babel language using a lambda to put
+    the execution function name together. */
+ pre.src-bash:before  { content: 'bash'; }
+ pre.src-csh:before  { content: 'csh'; }
+ pre.src-ash:before  { content: 'ash'; }
+ pre.src-dash:before  { content: 'dash'; }
+ pre.src-ksh:before  { content: 'ksh'; }
+ pre.src-mksh:before  { content: 'mksh'; }
+ pre.src-posh:before  { content: 'posh'; }
+ /* Additional Emacs modes also supported by the LaTeX listings package */
+ pre.src-ada:before { content: 'Ada'; }
+ pre.src-asm:before { content: 'Assembler'; }
+ pre.src-caml:before { content: 'Caml'; }
+ pre.src-delphi:before { content: 'Delphi'; }
+ pre.src-html:before { content: 'HTML'; }
+ pre.src-idl:before { content: 'IDL'; }
+ pre.src-mercury:before { content: 'Mercury'; }
+ pre.src-metapost:before { content: 'MetaPost'; }
+ pre.src-modula-2:before { content: 'Modula-2'; }
+ pre.src-pascal:before { content: 'Pascal'; }
+ pre.src-ps:before { content: 'PostScript'; }
+ pre.src-prolog:before { content: 'Prolog'; }
+ pre.src-simula:before { content: 'Simula'; }
+ pre.src-tcl:before { content: 'tcl'; }
+ pre.src-tex:before { content: 'TeX'; }
+ pre.src-plain-tex:before { content: 'Plain TeX'; }
+ pre.src-verilog:before { content: 'Verilog'; }
+ pre.src-vhdl:before { content: 'VHDL'; }
+ pre.src-xml:before { content: 'XML'; }
+ pre.src-nxml:before { content: 'XML'; }
+ /* add a generic configuration mode; LaTeX export needs an additional
+    (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+ pre.src-conf:before { content: 'Configuration File'; }
+
+ table { border-collapse:collapse; }
+ caption.t-above { caption-side: top; }
+ caption.t-bottom { caption-side: bottom; }
+ td, th { vertical-align:top;  }
+ th.org-right  { text-align: center;  }
+ th.org-left   { text-align: center;   }
+ th.org-center { text-align: center; }
+ td.org-right  { text-align: right;  }
+ td.org-left   { text-align: left;   }
+ td.org-center { text-align: center; }
+ dt { font-weight: bold; }
+ .footpara { display: inline; }
+ .footdef  { margin-bottom: 1em; }
+ .figure { padding: 1em; }
+ .figure p { text-align: center; }
+ .inlinetask {
+     padding: 10px;
+     border: 2px solid gray;
+     margin: 10px;
+     background: #ffffcc;
+ }
+ #org-div-home-and-up
+ { text-align: right; font-size: 70%; white-space: nowrap; }
+ textarea { overflow-x: auto; }
+ .linenr { font-size: smaller }
+ .code-highlighted { background-color: #ffff00; }
+ .org-info-js_info-navigation { border-style: none; }
+ #org-info-js_console-label
+ { font-size: 10px; font-weight: bold; white-space: nowrap; }
+ .org-info-js_search-highlight
+ { background-color: #ffff00; color: #000000; font-weight: bold; }
+ .org-svg { width: 90%; }
+ /*]]>*/-->
+</style>
+<script type="text/javascript">
+ /*
+    @licstart  The following is the entire license notice for the
+    JavaScript code in this tag.
+
+    Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+    The JavaScript code in this tag is free software: you can
+    redistribute it and/or modify it under the terms of the GNU
+    General Public License (GNU GPL) as published by the Free Software
+    Foundation, either version 3 of the License, or (at your option)
+    any later version.  The code is distributed WITHOUT ANY WARRANTY;
+    without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+    As additional permission under GNU GPL version 3 section 7, you
+    may distribute non-source (e.g., minimized or compacted) forms of
+    that code without the copy of the GNU GPL normally required by
+    section 4, provided you include this license notice and a URL
+    through which recipients can access the Corresponding Source.
+
+
+    @licend  The above is the entire license notice
+    for the JavaScript code in this tag.
+  */
+ <!--/*--><![CDATA[/*><!--*/
+                               function CodeHighlightOn(elem, id)
+ {
+     var target = document.getElementById(id);
+     if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+     }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+     var target = document.getElementById(id);
+     if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+     if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+ }
+ /*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+ MathJax.Hub.Config({
+     displayAlign: "center",
+     displayIndent: "0em",
+
+     "HTML-CSS": { scale: 150,
+                   linebreaks: { automatic: "false" },
+                   webFont: "TeX"
+     },
+     SVG: {scale: 150,
+           linebreaks: { automatic: "false" },
+           font: "TeX"},
+     NativeMML: {scale: 150},
+     TeX: { equationNumbers: {autoNumber: "AMS"},
+            MultLineWidth: "85%",
+            TagSide: "right",
+            TagIndent: ".8em"
+     }
+ });
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+
+   <style type ="text/css">
+ @import 'https://fonts.googleapis.com/css?family=Raleway|Crimson+Text|Open+Sans|Source+Code+Pro';
+ body {
+     z-index:500;
+     max-width: 800px;
+     font-family: 'Open Sans', sans;
+     margin: 0 auto;
+     padding: 5px;
+     background-color: aliceblue;
+ }
+
+ img {
+     max-width: 800px;
+ }
+ h1, h2, h3, h4, h5, h6 {
+     font-family: 'Open Sans', sans;
+ }
+ .page-wrapper {
+     margin-bottom: 1em;
+ }
+ a {
+     color: #0095dd;
+     text-decoration:none;
+ }
+ a:hover {
+     color:white;
+     background-color: #0095dd;
+ }
+ .page-wrapper:after {
+     content: "\00A7";
+     text-align: center;
+     display: block;
+     margin: 2em;
+     font-size: 1.5em;
+ }
+.highlight pre {
+    font-weight: bold;
+    border: 0;
+    box-shadow: none;
+}
+.highlight .hll { background-color: #49483e }
+.highlight  { background: #272822; color: #f8f8f2 }
+.highlight .c { color: #75715e } /* Comment */
+.highlight .err { color: #960050; background-color: #1e0010 } /* Error */
+.highlight .k { color: #66d9ef } /* Keyword */
+.highlight .l { color: #ae81ff } /* Literal */
+.highlight .n { color: #f8f8f2 } /* Name */
+.highlight .o { color: #f92672 } /* Operator */
+.highlight .p { color: #f8f8f2 } /* Punctuation */
+.highlight .ch { color: #75715e } /* Comment.Hashbang */
+.highlight .cm { color: #75715e } /* Comment.Multiline */
+.highlight .cp { color: #75715e } /* Comment.Preproc */
+.highlight .cpf { color: #75715e } /* Comment.PreprocFile */
+.highlight .c1 { color: #75715e } /* Comment.Single */
+.highlight .cs { color: #75715e } /* Comment.Special */
+.highlight .gd { color: #f92672 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gi { color: #a6e22e } /* Generic.Inserted */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #75715e } /* Generic.Subheading */
+.highlight .kc { color: #66d9ef } /* Keyword.Constant */
+.highlight .kd { color: #66d9ef } /* Keyword.Declaration */
+.highlight .kn { color: #f92672 } /* Keyword.Namespace */
+.highlight .kp { color: #66d9ef } /* Keyword.Pseudo */
+.highlight .kr { color: #66d9ef } /* Keyword.Reserved */
+.highlight .kt { color: #66d9ef } /* Keyword.Type */
+.highlight .ld { color: #e6db74 } /* Literal.Date */
+.highlight .m { color: #ae81ff } /* Literal.Number */
+.highlight .s { color: #e6db74 } /* Literal.String */
+.highlight .na { color: #a6e22e } /* Name.Attribute */
+.highlight .nb { color: #f8f8f2 } /* Name.Builtin */
+.highlight .nc { color: #a6e22e } /* Name.Class */
+.highlight .no { color: #66d9ef } /* Name.Constant */
+.highlight .nd { color: #a6e22e } /* Name.Decorator */
+.highlight .ni { color: #f8f8f2 } /* Name.Entity */
+.highlight .ne { color: #a6e22e } /* Name.Exception */
+.highlight .nf { color: #a6e22e } /* Name.Function */
+.highlight .nl { color: #f8f8f2 } /* Name.Label */
+.highlight .nn { color: #f8f8f2 } /* Name.Namespace */
+.highlight .nx { color: #a6e22e } /* Name.Other */
+.highlight .py { color: #f8f8f2 } /* Name.Property */
+.highlight .nt { color: #f92672 } /* Name.Tag */
+.highlight .nv { color: #f8f8f2 } /* Name.Variable */
+.highlight .ow { color: #f92672 } /* Operator.Word */
+.highlight .w { color: #f8f8f2 } /* Text.Whitespace */
+.highlight .mb { color: #ae81ff } /* Literal.Number.Bin */
+.highlight .mf { color: #ae81ff } /* Literal.Number.Float */
+.highlight .mh { color: #ae81ff } /* Literal.Number.Hex */
+.highlight .mi { color: #ae81ff } /* Literal.Number.Integer */
+.highlight .mo { color: #ae81ff } /* Literal.Number.Oct */
+.highlight .sa { color: #e6db74 } /* Literal.String.Affix */
+.highlight .sb { color: #e6db74 } /* Literal.String.Backtick */
+.highlight .sc { color: #e6db74 } /* Literal.String.Char */
+.highlight .dl { color: #e6db74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #e6db74 } /* Literal.String.Doc */
+.highlight .s2 { color: #e6db74 } /* Literal.String.Double */
+.highlight .se { color: #ae81ff } /* Literal.String.Escape */
+.highlight .sh { color: #e6db74 } /* Literal.String.Heredoc */
+.highlight .si { color: #e6db74 } /* Literal.String.Interpol */
+.highlight .sx { color: #e6db74 } /* Literal.String.Other */
+.highlight .sr { color: #e6db74 } /* Literal.String.Regex */
+.highlight .s1 { color: #e6db74 } /* Literal.String.Single */
+.highlight .ss { color: #e6db74 } /* Literal.String.Symbol */
+.highlight .bp { color: #f8f8f2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #a6e22e } /* Name.Function.Magic */
+.highlight .vc { color: #f8f8f2 } /* Name.Variable.Class */
+.highlight .vg { color: #f8f8f2 } /* Name.Variable.Global */
+.highlight .vi { color: #f8f8f2 } /* Name.Variable.Instance */
+.highlight .vm { color: #f8f8f2 } /* Name.Variable.Magic */
+.highlight .il { color: #ae81ff } /* Literal.Number.Integer.Long */
+
+</style>
+
+</head>
+
+
+    <body>
+      <header>
+    <h1>
+        <a href="/posts">Milind's Writeups</a>
+    </h1>
+</header>
+
+<!-- header styles -->
+
+<style type="text/css">
+ header h1 {
+     font-family: Raleway, sans;
+ }
+ header h1 a {
+     color: black;
+     text-decoration: none;
+ }
+</style>
+
+      <div class="page-navigation">
+    <div class="prev-container">
+     
+      <a class="prev" href="/posts/2017/09/06/Please_use_gdb.html">&laquo; Please Use GDB</a>
+      
+    </div>
+    <div class="up-container">
+        <a class="up" href="/posts/">Up</a>
+    </div>
+    <div class="next-container">
+     
+    </div>
+</div>
+<!-- page nav styles -->
+
+<style type="text/css">
+ .page-navigation {
+     margin: 0 auto;
+     display: flex;
+     justify-content: space-between;
+ }
+ .page-navigation .prev-container {
+     flex-basis: 40%;
+     text-align: left;
+ }
+ .page-navigation a {
+      text-align: center;
+  }
+ .page-navigation .next-container {
+     text-align: right;
+     flex-basis: 40%;
+ }
+
+</style>
+
+
+        <section class="page-wrapper">
+            <h1>Visualizing my browsing history</h1>
+            <p><img src="/posts/assets/img/history_overview.png" alt="/posts/assets/img/history_overview.png" /></p>
+<h1>What I Wanted to See</h1>
+<p>One might wonder, how I came across this idea, why I wanted to visualize my
+  browsing history in the first place.
+  The answer - I don&#8217;t remember. And that&#8217;s often the case - it&#8217;s not possible for
+  me to remember what connections I made while coming to an idea.</p>
+<p>How an idea starts, and how it ends, and all the intermediate steps in between.</p>
+<p>But even as it isn&#8217;t possible for <i>ideas</i>, it&#8217;s definitely possible for my
+  browsing habits. I <i>can</i> tell how I end up finding interesting sites, I <i>can</i>
+  tell how my browsing habits look like - if I always start typing some known
+  URLs, or do I jump deep from site to site.</p>
+<p>While the original idea - of tracking flow from URL to URL - is a good idea,
+  it&#8217;s not a great visualization. The graph would have 120,000+ nodes.
+  And that&#8217;s a lot of nodes.</p>
+<p>So rather than tracking flow from URL to URL, I decided to track my flow from
+  host to host.</p>
+<p>I decided to use <b>R</b>, with which I have only a passing familiarity.</p>
+<p>Here&#8217;s what I needed to get started:</p>
+<h1>Getting the Data</h1>
+<p>I primarily use Firefox, and Firefox stores my browsing history in a SQLite
+  database - <code>places.sqlite</code>. It&#8217;s made per-profile, and for my Windows machine,
+  it was located at
+  <code>C:\Users\&lt;username&gt;\AppData\Roaming\Mozilla\Firefox\Profiles\&lt;profile name&gt;\places.sqlite</code>.</p>
+<p>To avoid any accidents, I made a copy and worked on that.</p>
+<div class="highlight"><pre><span></span><span class="n">con</span> <span class="o">&lt;-</span> <span class="nf">dbConnect</span><span class="p">(</span><span class="n">RSQLite</span><span class="o">::</span><span class="nf">SQLite</span><span class="p">(),</span> <span class="s">&quot;C:/Users/Milind/Documents/places_snapshot.sqlite&quot;</span><span class="p">)</span>
+</pre></div>
+<p>The schema of the database is available <a href="https://wiki.mozilla.org/images/d/d5/Places.sqlite.schema3.pdf">here</a>.</p>
+<p>The table <code>moz_places</code> contains a list of all pages I&#8217;ve ever visited.</p>
+<p>The table <code>moz_historyvisits</code> contains information about every visit to a page:</p>
+<ul>
+  <li>the id of the page itself, a reference to the page in the table <code>moz_places</code></li>
+  <li>the page from which I came to this page - to track the &#8220;flow&#8221;</li>
+  <li>a <code>visit_type</code>, an integer which determines how I ended up on this page</li>
+</ul>
+<p>It took some additional code reading to understand what each <code>visit_type</code>
+  corresponded to - each corresponds to a transition type, found in the file
+  <a href="https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/places/nsINavHistoryService.idl#l946">nsINavHistoryService.idl</a>.</p>
+<p>Putting this information together, we need two queries to get the data.</p>
+<p>First, a query to get the list of all pages I have visited by clicking links.</p>
+<p>That corresponds to a <code>visit_type</code> of <code>1</code>.</p>
+<p>We extract both the source (where I clicked the link) and target (the page I
+  ended up on after clicking the link).</p>
+<div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">&lt;-</span> <span class="nf">dbSendQuery</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="s">&quot;select p1.rev_host as target_host, p2.rev_host as source_host </span>
+<span class="s">                   from moz_historyvisits h1</span>
+<span class="s">                   join moz_historyvisits h2 on h1.from_visit == h2.id and h1.visit_type == 1</span>
+<span class="s">                   join moz_places p1 on h1.place_id == p1.id</span>
+<span class="s">                   join moz_places p2 on h2.place_id == p2.id</span>
+<span class="s">                   order by h1.visit_date desc;&quot;</span><span class="p">)</span>
+<span class="n">t1</span> <span class="o">&lt;-</span> <span class="nf">dbFetch</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+<p>Second, a query to get a list of all the pages I have visited by typing them in
+  the address bar.</p>
+<p>That corresponds to a <code>visit_type</code> of <code>2</code>.</p>
+<p>In this case, Firefox doesn&#8217;t save a source, so we use the a constant source,
+  &#8220;new_tab&#8221;.</p>
+<div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">&lt;-</span> <span class="nf">dbSendQuery</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="s">&quot;select p1.rev_host as target_host, \&quot;bat_wen\&quot; as source_host</span>
+<span class="s">    from moz_historyvisits h1</span>
+<span class="s">    join moz_places p1 on h1.place_id == p1.id</span>
+<span class="s">    where h1.visit_type == 2</span>
+<span class="s">    order by h1.visit_date desc;&quot;</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">&lt;-</span> <span class="nf">dbFetch</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+<p>You&#8217;ll notice that I have reversed &#8220;new_tab&#8221; in the above query - that&#8217;s to make
+  it identical to the other hosts we are fetching.</p>
+<p>The hostnames are stored in the tables in the <code>rev_host</code> column - and they&#8217;re
+  reversed. So, to get the actual hostnames, we need to reverse them, and join
+  the two different types of data above.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Merge and clean the data.</span>
+<span class="n">t</span> <span class="o">&lt;-</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
+<span class="n">t</span><span class="o">$</span><span class="n">source_host</span> <span class="o">=</span> <span class="n">stringi</span><span class="o">::</span><span class="nf">stri_reverse</span><span class="p">(</span><span class="n">t</span><span class="o">$</span><span class="n">source_host</span><span class="p">)</span>
+<span class="n">t</span><span class="o">$</span><span class="n">target_host</span> <span class="o">=</span> <span class="n">stringi</span><span class="o">::</span><span class="nf">stri_reverse</span><span class="p">(</span><span class="n">t</span><span class="o">$</span><span class="n">target_host</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="p">[,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;source_host&quot;</span><span class="p">,</span> <span class="s">&quot;target_host&quot;</span><span class="p">)]</span>
+</pre></div>
+<p>Here&#8217;s the result:</p>
+<div class="highlight"><pre><span></span>&gt; head(t)
+          source_host         target_host
+1         .igraph.org         .igraph.org
+2  .music.youtube.com  .music.youtube.com
+3 .cran.r-project.org .mirrors.dotsrc.org
+4 .cran.r-project.org         .ftp.fau.de
+5  .www.r-project.org .cran.r-project.org
+6  .www.r-project.org .cran.r-project.org
+</pre></div>
+<h1>Converting it to a Graph</h1>
+<p>Luckily, R has a few handy packages/primitives that help us convert this data
+  into a directed graph.</p>
+<p>I have a habit of searching for tech questions on google, and then clicking
+  the stackoverflow link - a lot of times. That means there are a lot of edges from
+  google to stackoverflow.</p>
+<p>This looks quite bad - rather than multiple edges from one host to another, I would
+  want to show a thicker/darker edge.  So, for now, we remove all the duplicate edges.</p>
+<div class="highlight"><pre><span></span><span class="n">g1</span> <span class="o">=</span> <span class="nf">graph_from_data_frame</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">g2</span> <span class="o">=</span> <span class="nf">simplify</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span> <span class="n">remove.loops</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+</pre></div>
+<p>Now we need to calculate edge weights - we need to count how many duplicate edges
+  were there in the original graph.</p>
+<div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="nf">as.data.frame</span><span class="p">(</span><span class="nf">get.edgelist</span><span class="p">(</span><span class="n">g1</span><span class="p">))</span>
+<span class="n">agg</span> <span class="o">=</span> <span class="nf">as.data.frame</span><span class="p">(</span><span class="nf">aggregate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">x</span><span class="o">$</span><span class="n">V1</span><span class="p">,</span> <span class="n">x</span><span class="o">$</span><span class="n">V2</span><span class="p">),</span> <span class="n">FUN</span> <span class="o">=</span> <span class="n">length</span><span class="p">))</span>
+<span class="n">agg</span> <span class="o">=</span> <span class="n">agg</span><span class="p">[,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Group.1&quot;</span><span class="p">,</span> <span class="s">&quot;Group.2&quot;</span><span class="p">,</span> <span class="s">&quot;V1&quot;</span><span class="p">)]</span>
+<span class="nf">colnames</span><span class="p">(</span><span class="n">agg</span><span class="p">)</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;weight&quot;</span><span class="p">)</span>
+<span class="n">agg</span> <span class="o">=</span> <span class="nf">as.data.frame</span><span class="p">(</span><span class="n">agg</span><span class="p">)</span>
+</pre></div>
+<p>Here&#8217;s the result:</p>
+<div class="highlight"><pre><span></span>&gt; tail(agg)
+                    source              target weight
+3604               new_tab        .zerodha.com     66
+3605       .www.google.com .zerodha.quicko.com      1
+3606  .www.ycombinator.com           .zinc.com      1
+3607      .support.zoom.us            .zoom.us      1
+3608     .kite.zerodha.com             .zrd.sh      1
+3609 .news.ycombinator.com   .zwischenzugs.com      1
+</pre></div>
+<p>We need to assign this value to the actual edges of the graph we are planning to
+  plot. (The code for this turned out to be a bit of a mess, and I&#8217;m sure there&#8217;s
+  a better way to do it.)</p>
+<div class="highlight"><pre><span></span><span class="nf">E</span><span class="p">(</span><span class="n">g2</span><span class="p">)</span><span class="o">$</span><span class="n">weight</span> <span class="o">=</span> <span class="nf">sapply</span><span class="p">(</span><span class="nf">E</span><span class="p">(</span><span class="n">g2</span><span class="p">),</span> <span class="nf">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="nf">as.character</span><span class="p">(</span><span class="nf">ends</span><span class="p">(</span><span class="n">g2</span><span class="p">,</span><span class="n">e</span><span class="p">)[</span><span class="m">1</span><span class="p">])</span>
+  <span class="n">tgt</span> <span class="o">=</span> <span class="nf">as.character</span><span class="p">(</span><span class="nf">ends</span><span class="p">(</span><span class="n">g2</span><span class="p">,</span><span class="n">e</span><span class="p">)[</span><span class="m">2</span><span class="p">])</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">agg</span><span class="p">[</span><span class="n">agg</span><span class="o">$</span><span class="n">source</span> <span class="o">==</span> <span class="n">src</span> <span class="o">&amp;</span> <span class="n">agg</span><span class="o">$</span><span class="n">target</span> <span class="o">==</span> <span class="n">tgt</span><span class="p">,]</span>
+  <span class="nf">as.integer</span><span class="p">(</span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="m">1</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">],</span> <span class="m">0</span><span class="p">))</span>
+<span class="p">}</span> <span class="p">)</span>
+</pre></div>
+<h1>Plotting the Graph</h1>
+<p>There are a few more adjustments we need to make before the graph looks nice.</p>
+<p>First, we need to convert the weights of the edges into two values - one, the
+  thickness of the edge drawn on screen, and second, the color.</p>
+<p>The edge weight distribution is quite skewed - there are a lot of edges weighted
+  just 1 or 2, and then a few which are in the thousands.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">weights</span> <span class="o">=</span> <span class="nf">E</span><span class="p">(</span><span class="n">g2</span><span class="p">)</span><span class="o">$</span><span class="n">weight</span>
+<span class="o">&gt;</span> <span class="nf">summary</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+   <span class="n">Min.</span> <span class="m">1</span><span class="n">st</span> <span class="n">Qu.</span>  <span class="n">Median</span>    <span class="n">Mean</span> <span class="m">3</span><span class="n">rd</span> <span class="n">Qu.</span>    <span class="n">Max.</span> 
+   <span class="m">1.00</span>    <span class="m">1.00</span>    <span class="m">1.00</span>   <span class="m">10.71</span>    <span class="m">2.00</span> <span class="m">3613.00</span> 
+</pre></div>
+<p>It wouldn&#8217;t be a good idea at all to directly use this for the thickness, since
+  a 3613 pixel thick edge would not be very nice to look at.</p>
+<p>We can&#8217;t even scale it linearly - the less weighted edges would disappear.</p>
+<p>So the only way I could think of was to scale them using a log function. Once I
+  had that in place, I played with the constants to make it look right.</p>
+<div class="highlight"><pre><span></span><span class="n">weights</span> <span class="o">=</span> <span class="nf">E</span><span class="p">(</span><span class="n">g2</span><span class="p">)</span><span class="o">$</span><span class="n">weight</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+<span class="n">df2</span><span class="o">$</span><span class="n">weights</span> <span class="o">=</span> <span class="nf">log</span><span class="p">(</span><span class="m">1</span> <span class="o">+</span> <span class="n">weights</span><span class="o">/</span><span class="nf">max</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">*</span> <span class="m">90</span><span class="p">)</span><span class="o">*</span><span class="m">0.5</span>
+</pre></div>
+<p>Similarly, the color needs to be set, as well. The idea is similar - the thicker
+  the edge, the darker it will be. An extra <code>pmin</code> ensures that we don&#8217;t end up with
+  edges which are completely white or too light colored, since we&#8217;re using a white
+  background.</p>
+<div class="highlight"><pre><span></span><span class="n">df2</span><span class="o">$</span><span class="n">scaled_weights</span> <span class="o">=</span> <span class="n">df2</span><span class="o">$</span><span class="n">weights</span> <span class="o">/</span> <span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">df2</span><span class="o">$</span><span class="n">weights</span><span class="p">))</span>
+<span class="n">df2</span><span class="o">$</span><span class="n">inv_c</span> <span class="o">=</span> <span class="nf">pmin</span><span class="p">(</span><span class="m">1</span> <span class="o">-</span> <span class="n">df2</span><span class="o">$</span><span class="n">scaled_weights</span><span class="p">,</span> <span class="m">0.8</span><span class="p">)</span>
+<span class="n">df2</span><span class="o">$</span><span class="n">color</span> <span class="o">=</span> <span class="nf">rgb</span><span class="p">(</span><span class="n">df2</span><span class="o">$</span><span class="n">inv_c</span><span class="p">,</span> <span class="n">df2</span><span class="o">$</span><span class="n">inv_c</span><span class="p">,</span> <span class="n">df2</span><span class="o">$</span><span class="n">inv_c</span><span class="p">)</span>
+</pre></div>
+<p>And that&#8217;s it! The next step is to actually, finally, plot the graph. I experimented
+  with <code>igraph</code> and <code>qgraph</code> to plot the graph, and settled on using <code>qgraph</code>
+  I could not make <code>igraph</code> lay out my nodes in a good way.</p>
+<p>I needed to play with the <code>repulsion</code> - a higher value of repulsion leads to
+  more clustering of nodes, and that led to a lot of overlapping nodes. You can
+  read more about it at the <a href="https://cran.r-project.org/web/packages/qgraph/qgraph.pdf">qgraph documentation.</a></p>
+<div class="highlight"><pre><span></span><span class="nf">png</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="m">15000</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="m">15000</span><span class="p">,</span> <span class="s">&quot;abc.png&quot;</span><span class="p">)</span>
+<span class="n">qgraph</span><span class="o">::</span><span class="nf">qgraph</span><span class="p">(</span><span class="nf">get.edgelist</span><span class="p">(</span><span class="n">g2</span><span class="p">),</span> 
+    <span class="n">border.width</span><span class="o">=</span><span class="m">0.02</span><span class="p">,</span>
+    <span class="n">repulsion</span><span class="o">=</span><span class="m">0.75</span><span class="p">,</span> 
+    <span class="n">edge.width</span> <span class="o">=</span> <span class="n">df2</span><span class="o">$</span><span class="n">weights</span><span class="p">,</span>
+    <span class="n">edge.color</span><span class="o">=</span><span class="n">df2</span><span class="o">$</span><span class="n">color</span><span class="p">)</span>
+<span class="nf">dev.off</span><span class="p">()</span>
+</pre></div>
+<h1>Conclusions</h1>
+<p><img src="/posts/assets/img/history_overview.png" alt="/posts/assets/img/history_overview.png" /></p>
+<p>The first thing I saw was that most of the time, rather than going from site to
+  site to site, I rather have a few &#8220;origins&#8221;, from where I visit a multitude of
+  sites.</p>
+<p>The graph is much <i>broader</i> than it is <i>deep</i>.</p>
+<p>Which are these &#8220;origins&#8221;?</p>
+<p><img src="/posts/assets/img/history_origin.png" alt="/posts/assets/img/history_origin.png" /></p>
+<p>The most natural &#8220;origin&#8221; is the new_tab page - the cases where I have manually
+  typed the URL. The other most common origins are google, and hacker news.</p>
+<p>That means most of my browsing <i>starts</i> at these sites - and in most cases, the
+  history is just one or two levels deep.</p>
+<p><img src="/posts/assets/img/history_wiki.png" alt="/posts/assets/img/history_wiki.png" />
+  A lot of paths end up on Wikipedia.</p>
+<p><img src="/posts/assets/img/history_reddit.png" alt="/posts/assets/img/history_reddit.png" />
+  Once I get to reddit, I find it difficult to leave.</p>
+
+        </section>
+
+      <div class="page-navigation">
+    <div class="prev-container">
+     
+      <a class="prev" href="/posts/2017/09/06/Please_use_gdb.html">&laquo; Please Use GDB</a>
+      
+    </div>
+    <div class="up-container">
+        <a class="up" href="/posts/">Up</a>
+    </div>
+    <div class="next-container">
+     
+    </div>
+</div>
+<!-- page nav styles -->
+
+<style type="text/css">
+ .page-navigation {
+     margin: 0 auto;
+     display: flex;
+     justify-content: space-between;
+ }
+ .page-navigation .prev-container {
+     flex-basis: 40%;
+     text-align: left;
+ }
+ .page-navigation a {
+      text-align: center;
+  }
+ .page-navigation .next-container {
+     text-align: right;
+     flex-basis: 40%;
+ }
+
+</style>
+
+        <aside class="footer">
+    <section class="left">
+        <ul>
+            <li><a href="//milindl.org">milindl.org</a></li>
+            <li><a href="//github.com/milindl" target="_blank">github</a></li>
+            <li><a href="//linkedin.com/in/milind-luthra" target="_blank">linked</a></li>
+        </ul>
+    </section>
+    <section class="right">
+        <p>Personal blog of Milind Luthra. All opinions here are my own.
+</p>
+    </section>
+</aside>
+
+<!-- Footer styles -->
+
+<style type="text/css">
+ .footer {
+     display: flex;
+     justify-content: space-around;
+     align-items: baseline;
+     margin: 0.5em;
+     margin-top: 1em;
+ }
+ .footer section {
+     /* border: 1px solid black; */
+ }
+ .footer section ul li {
+     margin: 0px;
+     padding: 0px;
+     list-style-type: none;
+ }
+ .footer section ul {
+     padding: 0px;
+     margin: 0px;
+ }
+ .footer .left {
+     flex-basis: 60%;
+     text-align: left;
+ }
+ .footer .right {
+     flex-basis: 40%;
+     text-align: right;
+ }
+</style>
+
+  </body>
+</html>

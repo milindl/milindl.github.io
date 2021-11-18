@@ -1,5 +1,184 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2018-04-01T19:37:07+05:30</updated><id>/www/</id><title type="html">Milind’s Writeups</title><subtitle>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
-</subtitle><entry><title type="html">Please Use GDB</title><link href="/www/2017/09/06/Please_use_gdb.html" rel="alternate" type="text/html" title="Please Use GDB" /><published>2017-09-06T00:00:00+05:30</published><updated>2017-09-06T00:00:00+05:30</updated><id>/www/2017/09/06/Please_use_gdb</id><content type="html" xml:base="/www/2017/09/06/Please_use_gdb.html">&lt;p&gt;&lt;i&gt;What this is not&lt;/i&gt;: a complete guide to &lt;code&gt;gdb&lt;/code&gt;. There are plenty of those
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://127.0.0.1:4000//posts/feed.xml" rel="self" type="application/atom+xml" /><link href="http://127.0.0.1:4000//posts/" rel="alternate" type="text/html" /><updated>2021-11-18T14:15:12+00:00</updated><id>http://127.0.0.1:4000//posts/</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
+</subtitle><entry><title type="html">Visualizing my browsing history</title><link href="http://127.0.0.1:4000//posts/2021/11/18/Visualizing_my_browsing_history.html" rel="alternate" type="text/html" title="Visualizing my browsing history" /><published>2021-11-18T00:00:00+00:00</published><updated>2021-11-18T00:00:00+00:00</updated><id>http://127.0.0.1:4000//posts/2021/11/18/Visualizing_my_browsing_history</id><content type="html" xml:base="http://127.0.0.1:4000//posts/2021/11/18/Visualizing_my_browsing_history.html">&lt;p&gt;&lt;img src=&quot;/posts/assets/img/history_overview.png&quot; alt=&quot;/posts/assets/img/history_overview.png&quot; /&gt;&lt;/p&gt;
+&lt;h1&gt;What I Wanted to See&lt;/h1&gt;
+&lt;p&gt;One might wonder, how I came across this idea, why I wanted to visualize my
+  browsing history in the first place.
+  The answer - I don&amp;#8217;t remember. And that&amp;#8217;s often the case - it&amp;#8217;s not possible for
+  me to remember what connections I made while coming to an idea.&lt;/p&gt;
+&lt;p&gt;How an idea starts, and how it ends, and all the intermediate steps in between.&lt;/p&gt;
+&lt;p&gt;But even as it isn&amp;#8217;t possible for &lt;i&gt;ideas&lt;/i&gt;, it&amp;#8217;s definitely possible for my
+  browsing habits. I &lt;i&gt;can&lt;/i&gt; tell how I end up finding interesting sites, I &lt;i&gt;can&lt;/i&gt;
+  tell how my browsing habits look like - if I always start typing some known
+  URLs, or do I jump deep from site to site.&lt;/p&gt;
+&lt;p&gt;While the original idea - of tracking flow from URL to URL - is a good idea,
+  it&amp;#8217;s not a great visualization. The graph would have 120,000+ nodes.
+  And that&amp;#8217;s a lot of nodes.&lt;/p&gt;
+&lt;p&gt;So rather than tracking flow from URL to URL, I decided to track my flow from
+  host to host.&lt;/p&gt;
+&lt;p&gt;I decided to use &lt;b&gt;R&lt;/b&gt;, with which I have only a passing familiarity.&lt;/p&gt;
+&lt;p&gt;Here&amp;#8217;s what I needed to get started:&lt;/p&gt;
+&lt;h1&gt;Getting the Data&lt;/h1&gt;
+&lt;p&gt;I primarily use Firefox, and Firefox stores my browsing history in a SQLite
+  database - &lt;code&gt;places.sqlite&lt;/code&gt;. It&amp;#8217;s made per-profile, and for my Windows machine,
+  it was located at
+  &lt;code&gt;C:\Users\&amp;lt;username&amp;gt;\AppData\Roaming\Mozilla\Firefox\Profiles\&amp;lt;profile name&amp;gt;\places.sqlite&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To avoid any accidents, I made a copy and worked on that.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbConnect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RSQLite&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;SQLite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C:/Users/Milind/Documents/places_snapshot.sqlite&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The schema of the database is available &lt;a href=&quot;https://wiki.mozilla.org/images/d/d5/Places.sqlite.schema3.pdf&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The table &lt;code&gt;moz_places&lt;/code&gt; contains a list of all pages I&amp;#8217;ve ever visited.&lt;/p&gt;
+&lt;p&gt;The table &lt;code&gt;moz_historyvisits&lt;/code&gt; contains information about every visit to a page:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the id of the page itself, a reference to the page in the table &lt;code&gt;moz_places&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;the page from which I came to this page - to track the &amp;#8220;flow&amp;#8221;&lt;/li&gt;
+  &lt;li&gt;a &lt;code&gt;visit_type&lt;/code&gt;, an integer which determines how I ended up on this page&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It took some additional code reading to understand what each &lt;code&gt;visit_type&lt;/code&gt;
+  corresponded to - each corresponds to a transition type, found in the file
+  &lt;a href=&quot;https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/places/nsINavHistoryService.idl#l946&quot;&gt;nsINavHistoryService.idl&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Putting this information together, we need two queries to get the data.&lt;/p&gt;
+&lt;p&gt;First, a query to get the list of all pages I have visited by clicking links.&lt;/p&gt;
+&lt;p&gt;That corresponds to a &lt;code&gt;visit_type&lt;/code&gt; of &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We extract both the source (where I clicked the link) and target (the page I
+  ended up on after clicking the link).&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbSendQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;select p1.rev_host as target_host, p2.rev_host as source_host &lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                   from moz_historyvisits h1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                   join moz_historyvisits h2 on h1.from_visit == h2.id and h1.visit_type == 1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                   join moz_places p1 on h1.place_id == p1.id&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                   join moz_places p2 on h2.place_id == p2.id&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                   order by h1.visit_date desc;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;t1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbFetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, a query to get a list of all the pages I have visited by typing them in
+  the address bar.&lt;/p&gt;
+&lt;p&gt;That corresponds to a &lt;code&gt;visit_type&lt;/code&gt; of &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;In this case, Firefox doesn&amp;#8217;t save a source, so we use the a constant source,
+  &amp;#8220;new_tab&amp;#8221;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbSendQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;select p1.rev_host as target_host, \&amp;quot;bat_wen\&amp;quot; as source_host&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;    from moz_historyvisits h1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;    join moz_places p1 on h1.place_id == p1.id&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;    where h1.visit_type == 2&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;    order by h1.visit_date desc;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;t2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbFetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You&amp;#8217;ll notice that I have reversed &amp;#8220;new_tab&amp;#8221; in the above query - that&amp;#8217;s to make
+  it identical to the other hosts we are fetching.&lt;/p&gt;
+&lt;p&gt;The hostnames are stored in the tables in the &lt;code&gt;rev_host&lt;/code&gt; column - and they&amp;#8217;re
+  reversed. So, to get the actual hostnames, we need to reverse them, and join
+  the two different types of data above.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# Merge and clean the data.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rbind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;source_host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stringi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stri_reverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;source_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target_host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stringi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stri_reverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;source_host&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;target_host&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#8217;s the result:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; head(t)
+          source_host         target_host
+1         .igraph.org         .igraph.org
+2  .music.youtube.com  .music.youtube.com
+3 .cran.r-project.org .mirrors.dotsrc.org
+4 .cran.r-project.org         .ftp.fau.de
+5  .www.r-project.org .cran.r-project.org
+6  .www.r-project.org .cran.r-project.org
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1&gt;Converting it to a Graph&lt;/h1&gt;
+&lt;p&gt;Luckily, R has a few handy packages/primitives that help us convert this data
+  into a directed graph.&lt;/p&gt;
+&lt;p&gt;I have a habit of searching for tech questions on google, and then clicking
+  the stackoverflow link - a lot of times. That means there are a lot of edges from
+  google to stackoverflow.&lt;/p&gt;
+&lt;p&gt;This looks quite bad - rather than multiple edges from one host to another, I would
+  want to show a thicker/darker edge.  So, for now, we remove all the duplicate edges.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;graph_from_data_frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;simplify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;remove.loops&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now we need to calculate edge weights - we need to count how many duplicate edges
+  were there in the original graph.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;as.data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get.edgelist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;as.data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aggregate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;V1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;V2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FUN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Group.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Group.2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;V1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;colnames&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;source&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;target&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;weight&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;as.data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#8217;s the result:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; tail(agg)
+                    source              target weight
+3604               new_tab        .zerodha.com     66
+3605       .www.google.com .zerodha.quicko.com      1
+3606  .www.ycombinator.com           .zinc.com      1
+3607      .support.zoom.us            .zoom.us      1
+3608     .kite.zerodha.com             .zrd.sh      1
+3609 .news.ycombinator.com   .zwischenzugs.com      1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We need to assign this value to the actual edges of the graph we are planning to
+  plot. (The code for this turned out to be a bit of a mess, and I&amp;#8217;m sure there&amp;#8217;s
+  a better way to do it.)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weight&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sapply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;as.character&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ends&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;tgt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;as.character&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ends&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tgt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;
+  &lt;span class=&quot;nf&quot;&gt;as.integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ifelse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1&gt;Plotting the Graph&lt;/h1&gt;
+&lt;p&gt;There are a few more adjustments we need to make before the graph looks nice.&lt;/p&gt;
+&lt;p&gt;First, we need to convert the weights of the edges into two values - one, the
+  thickness of the edge drawn on screen, and second, the color.&lt;/p&gt;
+&lt;p&gt;The edge weight distribution is quite skewed - there are a lot of edges weighted
+  just 1 or 2, and then a few which are in the thousands.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weight&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;Min.&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;st&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Qu.&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Median&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Mean&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rd&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Qu.&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Max.&lt;/span&gt; 
+   &lt;span class=&quot;m&quot;&gt;1.00&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;1.00&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;1.00&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;10.71&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;2.00&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3613.00&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It wouldn&amp;#8217;t be a good idea at all to directly use this for the thickness, since
+  a 3613 pixel thick edge would not be very nice to look at.&lt;/p&gt;
+&lt;p&gt;We can&amp;#8217;t even scale it linearly - the less weighted edges would disappear.&lt;/p&gt;
+&lt;p&gt;So the only way I could think of was to scale them using a log function. Once I
+  had that in place, I played with the constants to make it look right.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weight&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;90&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.5&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Similarly, the color needs to be set, as well. The idea is similar - the thicker
+  the edge, the darker it will be. An extra &lt;code&gt;pmin&lt;/code&gt; ensures that we don&amp;#8217;t end up with
+  edges which are completely white or too light colored, since we&amp;#8217;re using a white
+  background.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scaled_weights&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inv_c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scaled_weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;color&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rgb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inv_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inv_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inv_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And that&amp;#8217;s it! The next step is to actually, finally, plot the graph. I experimented
+  with &lt;code&gt;igraph&lt;/code&gt; and &lt;code&gt;qgraph&lt;/code&gt; to plot the graph, and settled on using &lt;code&gt;qgraph&lt;/code&gt;
+  I could not make &lt;code&gt;igraph&lt;/code&gt; lay out my nodes in a good way.&lt;/p&gt;
+&lt;p&gt;I needed to play with the &lt;code&gt;repulsion&lt;/code&gt; - a higher value of repulsion leads to
+  more clustering of nodes, and that led to a lot of overlapping nodes. You can
+  read more about it at the &lt;a href=&quot;https://cran.r-project.org/web/packages/qgraph/qgraph.pdf&quot;&gt;qgraph documentation.&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;png&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;15000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;15000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abc.png&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;qgraph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;qgraph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get.edgelist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;border.width&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.02&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;repulsion&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;edge.width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;edge.color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;dev.off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1&gt;Conclusions&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&quot;/posts/assets/img/history_overview.png&quot; alt=&quot;/posts/assets/img/history_overview.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;The first thing I saw was that most of the time, rather than going from site to
+  site to site, I rather have a few &amp;#8220;origins&amp;#8221;, from where I visit a multitude of
+  sites.&lt;/p&gt;
+&lt;p&gt;The graph is much &lt;i&gt;broader&lt;/i&gt; than it is &lt;i&gt;deep&lt;/i&gt;.&lt;/p&gt;
+&lt;p&gt;Which are these &amp;#8220;origins&amp;#8221;?&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/posts/assets/img/history_origin.png&quot; alt=&quot;/posts/assets/img/history_origin.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;The most natural &amp;#8220;origin&amp;#8221; is the new_tab page - the cases where I have manually
+  typed the URL. The other most common origins are google, and hacker news.&lt;/p&gt;
+&lt;p&gt;That means most of my browsing &lt;i&gt;starts&lt;/i&gt; at these sites - and in most cases, the
+  history is just one or two levels deep.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/posts/assets/img/history_wiki.png&quot; alt=&quot;/posts/assets/img/history_wiki.png&quot; /&gt;
+  A lot of paths end up on Wikipedia.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/posts/assets/img/history_reddit.png&quot; alt=&quot;/posts/assets/img/history_reddit.png&quot; /&gt;
+  Once I get to reddit, I find it difficult to leave.&lt;/p&gt;</content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">Please Use GDB</title><link href="http://127.0.0.1:4000//posts/2017/09/06/Please_use_gdb.html" rel="alternate" type="text/html" title="Please Use GDB" /><published>2017-09-06T00:00:00+00:00</published><updated>2017-09-06T00:00:00+00:00</updated><id>http://127.0.0.1:4000//posts/2017/09/06/Please_use_gdb</id><content type="html" xml:base="http://127.0.0.1:4000//posts/2017/09/06/Please_use_gdb.html">&lt;p&gt;&lt;i&gt;What this is not&lt;/i&gt;: a complete guide to &lt;code&gt;gdb&lt;/code&gt;. There are plenty of those
   online.
   This is primarily an opinion/experience piece on why &lt;i&gt;I&lt;/i&gt; find &lt;code&gt;gdb&lt;/code&gt; to be essential. There
   is &lt;i&gt;some&lt;/i&gt; usage instruction, but that is to enable anyone to follow along.&lt;/p&gt;
@@ -14,23 +193,22 @@
 &lt;p&gt;This section is not about my life in general, or about why I had to (finally) use C/C++. This
   is about the question that I asked myself the most while debugging my C/C++ programs.&lt;/p&gt;
 &lt;p&gt;&lt;i&gt;Where did the segfault occur? Till where was the program successful? Where did it all go wrong?&lt;/i&gt;&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;C&quot;&gt;
-void incrementPtrIncreaseValue(int **p, int n) {
-  *p = (*p) + n;
-  *p += 1;
-}
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;incrementPtrIncreaseValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-int main() {
-  int *x = (int *)malloc(sizeof(int) * 20);
-  for (int i = 0; i &amp;lt; 20; i++) x[i] = i;
-  int *ptr = x;
-  for (int i = 0; i &amp;lt; 20; i++) {
-    incrementPtrIncreaseValue(&amp;amp;ptr, 0);
-    printf(&amp;quot;%d &amp;quot;, *(ptr - 1));
-  }
-  return 0;
-}
-&lt;/pre&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;incrementPtrIncreaseValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;%d &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is a program in which the function &lt;code&gt;incrementPtrIncreaseValue&lt;/code&gt; is supposed to increment
   the pointer passed to it, and increase the &lt;i&gt;value&lt;/i&gt; stored at the pointed location by &lt;code&gt;n&lt;/code&gt;. Then,
   we make an array &lt;code&gt;x = {0 ... 19}&lt;/code&gt; and loop over it, intending to increment every element.&lt;/p&gt;
@@ -40,23 +218,20 @@ int main() {
   is unchanged.&lt;/p&gt;
 &lt;p&gt;On an initial run, the program will work as expected - to test it out, you put &lt;code&gt;n = 0&lt;/code&gt;, so you didn&amp;#8217;t notice
   any issues with it. However, then you decide to increment by 10, and behold the output that follows (your mileage may vary a bit):&lt;/p&gt;
-&lt;pre class=&quot;src&quot;&gt;
-10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;i&gt;Ughh, the first element seems to be correct&lt;/i&gt;, you think, &lt;i&gt;where did I go wrong?&lt;/i&gt;&lt;/p&gt;
 &lt;p&gt;And to verify that your program is indeed totally and completely wrong, you replace 10 with a -2. (Again, your mileage may vary).&lt;/p&gt;
-&lt;pre class=&quot;src&quot;&gt;
-segmentation fault (core dumped)  ./executable_name
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;segmentation fault (core dumped)  ./executable_name
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;You&amp;#8217;d probably be thinking that this particular error is rather trivial to fix &amp;#8211; and indeed, it is, but if there&amp;#8217;s also a lot of other code
   lying around, it is extremely hard to isolate the source of the error.&lt;/p&gt;
 &lt;p&gt;[0] Please don&amp;#8217;t point out that I&amp;#8217;ve not included any standard libraries, even though it affects line numbering later. Deal with it, it&amp;#8217;s a non-issue.&lt;/p&gt;
 &lt;h1&gt;&lt;code&gt;printf&lt;/code&gt; and copy-paste&lt;/h1&gt;
 &lt;p&gt;My old go-to method for dealing with such errors was adding a bunch of &lt;code&gt;printf&lt;/code&gt; statements to the code, which would
   typically look like this: [1]&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;C&quot;&gt;
-printf(&amp;quot;Reached uptill [linenum], with **ptr = %d&amp;quot;, **ptr);
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Reached uptill [linenum], with **ptr = %d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;These would be littered in huge numbers around the lines I was suspicious of. Often, I would need to add these
   manually, since the content of the &lt;code&gt;printf&lt;/code&gt; statements would often depend on the statement preceding it.&lt;/p&gt;
 &lt;p&gt;I think that anyone can understand why this is tedious, and why I perceived it as being difficult. I would often rewrite
@@ -68,21 +243,18 @@ printf(&amp;quot;Reached uptill [linenum], with **ptr = %d&amp;quot;, **ptr);
 &lt;p&gt;To actually use &lt;code&gt;gdb&lt;/code&gt;, you need to compile your program with &amp;#8216;debug symbols&amp;#8217;. Without those, &lt;code&gt;gdb&lt;/code&gt; cannot be very effective.
   This is because there&amp;#8217;s a lot of information that&amp;#8217;s lost while compiling, for instance, what memory location corresponds
   to what variable, and what line number in your source file corresponds to the code running in the executable.&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;bash&quot;&gt;
-$ gcc -g faultycode.c -o executable_name
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ gcc -g faultycode.c -o executable_name
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;-g&lt;/code&gt; flag takes care of the debug symbols. I also recommend that &lt;a href=&quot;https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html&quot;&gt;optimizations&lt;/a&gt; be minimized during the compilation using the
   &lt;code&gt;-O0&lt;/code&gt; or &lt;code&gt;Og&lt;/code&gt; flag [2], since the compiler often decides that certain statements, like &lt;code&gt;x = x&lt;/code&gt; do not have any side effects, or certain variables
   are not needed (all those convenience variables we make to improve clarity of our code), and also &lt;a href=&quot;https://en.wikipedia.org/wiki/Inline_function&quot;&gt;inlines&lt;/a&gt; some functions. So, you can use
   either of the following statements.&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;bash&quot;&gt;
-$ gcc -g -O0 faultycode.c -o executable_name
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ gcc -g -O0 faultycode.c -o executable_name
 $ gcc -g -Og faultycode.c -o executable_name
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And now, you&amp;#8217;re ready to start &lt;code&gt;gdb&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;bash&quot;&gt;
-$ gdb ./executable_name
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ gdb ./executable_name
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;[2] In certain cases, you might encounter an issue that is present &lt;i&gt;only&lt;/i&gt; in the optimized version, and the unoptimized version
   works fine. In such a case, this will not hold. I&amp;#8217;ve never been a victim of this, however, I&amp;#8217;ve often been a victim of the
   &lt;code&gt;$n = &amp;lt;optimized out&amp;gt;&lt;/code&gt; message which is printed out when a variable has been deemed unworthy by the compiler, so I stick to my
@@ -98,54 +270,48 @@ $ gdb ./executable_name
 &lt;p&gt;And a lot more! But I&amp;#8217;ll focus on the first and the second one.&lt;/p&gt;
 &lt;p&gt;Breakpoints can be set by line numbers, function names, and &lt;a href=&quot;ftp://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_28.html#SEC29&quot;&gt;a lot more.&lt;/a&gt; Let&amp;#8217;s set a breakpoint on the 11&lt;sup&gt;th&lt;/sup&gt; line of faultycode.c,
   and then start the program execution using &lt;code&gt;run&lt;/code&gt; (assume &lt;code&gt;n&lt;/code&gt; = 10 for this example).&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
-(gdb) break faultycode.c:11
-Breakpoint 1 at 0xXXX: file faultycode.c, line 11.
-(gdb) run
-Breakpoint 1, main () at faultycode.c:11
-11	    printf(&amp;quot;%d &amp;quot;, *(ptr - 1));
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;break&lt;/span&gt; faultycode.c:11
+Breakpoint &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; at 0xXXX: file faultycode.c, line &lt;span class=&quot;m&quot;&gt;11&lt;/span&gt;.
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; run
+Breakpoint &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;, main &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; at faultycode.c:11
+&lt;span class=&quot;m&quot;&gt;11&lt;/span&gt;	    printf&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;%d &amp;quot;&lt;/span&gt;, *&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ptr - &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now that the breakpoint has been set, you can print anything.&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
-(gdb) print *(ptr - 1)
-$n = 10
-(gdb) print *(ptr)
-$n = 11
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; print *&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ptr - &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; print *&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ptr&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;11&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;ptr&lt;/code&gt; should be pointing to &lt;code&gt;x[1]&lt;/code&gt; at this moment, and the value should be 1. The value at &lt;code&gt;x[0]&lt;/code&gt; or &lt;code&gt;ptr - 1&lt;/code&gt; should
   be 10. On printing &lt;code&gt;*(ptr - 1)&lt;/code&gt;, we realize that the value is indeed 10, but printing &lt;code&gt;*ptr&lt;/code&gt;, we get 11, instead of the 1 that
   we expect. Is the pointer wrong somehow? Let&amp;#8217;s see, it &lt;code&gt;ptr - 1&lt;/code&gt; should be the same as &lt;code&gt;x&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
-(gdb) print x
-$n = (int *) 0x555555756010
-(gdb) print ptr
-$n = (int *) 0x55555575603c
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; print x
+&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int *&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0x555555756010
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; print ptr
+&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int *&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0x55555575603c
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Subtracting, we see that they differ by 40! How is that possible? &lt;code&gt;sizeof(int)&lt;/code&gt; is 4, so the pointer hex values differing by 40 means that
   they point to integers which are 40/4 = 10 memory locations apart. Indeed, when you print &lt;code&gt;ptr - 11&lt;/code&gt; you see that it is the same as &lt;code&gt;x&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;So, it seems like we have discovered the root of our problem: &lt;code&gt;ptr&lt;/code&gt; is incremented incorrectly somewhere. But, &lt;code&gt;incrementPtrIncreaseValue&lt;/code&gt; is the
   only place where we actually change that. So, let&amp;#8217;s step through that code and try to find out what is wrong. First, let&amp;#8217;s set a breakpoint on
   &lt;code&gt;incrementPtrIncreaseValue&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
-(gdb) break incrementPtrIncreaseValue
-Breakpoint 2 at 0xXXX: file faultycode.c, line 2.
-(gdb) continue
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;break&lt;/span&gt; incrementPtrIncreaseValue
+Breakpoint &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; at 0xXXX: file faultycode.c, line &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;.
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Recall that currently, we are at a breakpoint, so program execution is halted. To start the program from where we stopped, &lt;code&gt;continue&lt;/code&gt; is used.
   Soon enough, the program will stop at the function, helpfully printing the parameters passed to it.&lt;/p&gt;
-&lt;pre class=&quot;src&quot; lang=&quot;shell&quot;&gt;
-Breakpoint 2, incrementPtrIncreaseValue (p=0x7fffffffe608, n=10) at faultycode.c:2
-2	  *p = (*p) + n;
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Breakpoint &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;, incrementPtrIncreaseValue &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x7fffffffe608, &lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at faultycode.c:2
+&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;	  *p &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;*p&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; + n&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I&amp;#8217;m sure that the problem will be clear enough at this point, so that you can correct it. If not, then the following commands will help:&lt;/p&gt;
-&lt;pre class=&quot;src&quot;&gt;
-(gdb) print *p
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(gdb) print *p
 $n = (int *) 0x55555575603c
 (gdb) step
 3	  *p += 1;
 (gdb) print *p
 $n = (int *) 0x555555756064
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I&amp;#8217;ll explain what happens - you stop &lt;i&gt;before&lt;/i&gt; executing the 2&lt;sup&gt;nd&lt;/sup&gt; line, and you print the value of &lt;code&gt;*p&lt;/code&gt;. Using &lt;code&gt;step&lt;/code&gt; [3] causes the execution
   of one line, so line 2 is executed, and you stop &lt;i&gt;before&lt;/i&gt; the execution of line 3. So, you can print &lt;code&gt;*p&lt;/code&gt; after the execution of line 2,
   and the error becomes clear on comparing the addresses. This step was not required in this case, since the error was easy to see, but
@@ -153,7 +319,7 @@ $n = (int *) 0x555555756064
   the code is much easier.&lt;/p&gt;
 &lt;p&gt;[3] In this case, &lt;code&gt;next&lt;/code&gt; would be equivalent to &lt;code&gt;step&lt;/code&gt; but the &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;difference is really worth knowing.&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;Go, Debug&lt;/h1&gt;
-&lt;p&gt;I repeat again, &lt;b&gt;this is not a guide&lt;/b&gt;. Please see &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;this comprehensive guide&lt;/a&gt;, or use &lt;code&gt;(gdb) help&lt;/code&gt; while inside &lt;code&gt;gdb&lt;/code&gt;, or &lt;a href=&quot;https://web.stanford.edu/class/cs107/guide_gdb.html&quot;&gt;this short guide.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">What this is not: a complete guide to gdb. There are plenty of those online. This is primarily an opinion/experience piece on why I find gdb to be essential. There is some usage instruction, but that is to enable anyone to follow along.</summary></entry><entry><title type="html">NPC Name Generator</title><link href="/www/2017/06/01/NPC_name_generator.html" rel="alternate" type="text/html" title="NPC Name Generator" /><published>2017-06-01T00:00:00+05:30</published><updated>2017-06-01T00:00:00+05:30</updated><id>/www/2017/06/01/NPC_name_generator</id><content type="html" xml:base="/www/2017/06/01/NPC_name_generator.html">&lt;h1&gt;On NPC Names&lt;/h1&gt;
+&lt;p&gt;I repeat again, &lt;b&gt;this is not a guide&lt;/b&gt;. Please see &lt;a href=&quot;https://sourceware.org/gdb/onlinedocs/gdb/Continuing-and-Stepping.html&quot;&gt;this comprehensive guide&lt;/a&gt;, or use &lt;code&gt;(gdb) help&lt;/code&gt; while inside &lt;code&gt;gdb&lt;/code&gt;, or &lt;a href=&quot;https://web.stanford.edu/class/cs107/guide_gdb.html&quot;&gt;this short guide.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">What this is not: a complete guide to gdb. There are plenty of those online. This is primarily an opinion/experience piece on why I find gdb to be essential. There is some usage instruction, but that is to enable anyone to follow along.</summary></entry><entry><title type="html">NPC Name Generator</title><link href="http://127.0.0.1:4000//posts/2017/06/01/NPC_name_generator.html" rel="alternate" type="text/html" title="NPC Name Generator" /><published>2017-06-01T00:00:00+00:00</published><updated>2017-06-01T00:00:00+00:00</updated><id>http://127.0.0.1:4000//posts/2017/06/01/NPC_name_generator</id><content type="html" xml:base="http://127.0.0.1:4000//posts/2017/06/01/NPC_name_generator.html">&lt;h1&gt;On NPC Names&lt;/h1&gt;
 &lt;p&gt;An NPC, or a non-playing character in a computer or role-playing game is a character controlled by the game, who helps set the scene and progress the story. I&amp;#8217;ll be addressing NPCs which are a part of sci-fi or fantasy games. In my opinion, these NPCs should have names that deviate enough from regular, run-of-the-mill, &amp;#8220;Earthly&amp;#8221; names, and impart an unfamiliar and exotic feel to the setting. However, they should not have names which are contrived and do not have a realistic mouthfeel, like &amp;#8220;Tchu&amp;#8217;quixthal&amp;#8221;, or be too generic, like &amp;#8220;The Wise Sage&amp;#8221;.&lt;/p&gt;
 &lt;p&gt;Diablo 2 is a game that gets it right in my opinion. Some examples are: Gheed, Akara, Charsi, Jerhyn.&lt;/p&gt;
 &lt;p&gt;Now, the challenge here is to come up with names which are different, yet similar to &amp;#8220;Earthly&amp;#8221; names. My idea is to take a &amp;#8220;seed&amp;#8221; name, and generate variants of it to come up with NPC names. The inspiration for this derives from Isaac Asimov&amp;#8217;s &lt;i&gt;Caves of Steel&lt;/i&gt;, in which there is a character called &lt;i&gt;Daneel&lt;/i&gt;, whose name is similar enough to &lt;i&gt;Daniel&lt;/i&gt;, but yet exotic enough (for my tastes, at least!).&lt;/p&gt;
@@ -183,21 +349,18 @@ $n = (int *) 0x555555756064
 &lt;h1&gt;Scoring Random Names&lt;/h1&gt;
 &lt;p&gt;We&amp;#8217;ve used &lt;b&gt;score&lt;/b&gt; above as a measure of how close a name is to the &amp;#8220;seed&amp;#8221; name, but we&amp;#8217;ve not discussed how to actually do this. A usual way of doing this is counting changes (number of additions, alterations and deletions needed to make the names same). I&amp;#8217;ve done something similar, using &lt;i&gt;alignments&lt;/i&gt;. I generate all the &lt;i&gt;alignments&lt;/i&gt; of the two names and to score the best one.&lt;/p&gt;
 &lt;p&gt;What is an alignment?&lt;/p&gt;
-&lt;pre class=&quot;src&quot;&gt;
-m i l i n d
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;m i l i n d
 + | | | | |
 n i l i n d
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The alignment above attempts to align &amp;#8220;milind&amp;#8221; to &amp;#8220;nilind&amp;#8221;. The &lt;code&gt;|&lt;/code&gt; denotes a &lt;i&gt;match&lt;/i&gt;, while the &lt;code&gt;+&lt;/code&gt; denotes a &lt;i&gt;mismatch&lt;/i&gt;. A &lt;i&gt;mismatch&lt;/i&gt; roughly hints towards an alteration.&lt;/p&gt;
-&lt;pre class=&quot;src&quot;&gt;
-m i l i n d
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;m i l i n d
 | _ | | | |
 m   l i n d
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The alignment above attempts to align &amp;#8220;milind&amp;#8221; to &amp;#8220;mlind&amp;#8221;. The &lt;code&gt;|&lt;/code&gt; denotes a &lt;i&gt;match&lt;/i&gt;, while the &lt;code&gt;_&lt;/code&gt; denotes a &lt;i&gt;gap&lt;/i&gt;. A &lt;i&gt;gap&lt;/i&gt; roughly hints towards an addition or a deletion.&lt;/p&gt;
 &lt;p&gt;There can be many alignments for any two names. For instance, for &amp;#8220;mil&amp;#8221; and &amp;#8220;lul&amp;#8221;, all the three alignments given below are valid.&lt;/p&gt;
-&lt;pre class=&quot;src&quot;&gt;
-m i l
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;m i l
 _ _ | _ _
     l u l
 score: -3
@@ -211,7 +374,7 @@ m i l
 _ + + _
   l u l
 score: -1
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Each of these alignments is assigned a score. For each &lt;i&gt;match&lt;/i&gt;, an alignment is given 1 point. For each &lt;i&gt;mismatch&lt;/i&gt;, an alignment is given 0.5 points, and for each &lt;i&gt;gap&lt;/i&gt;, an alignment is given -1 points. We calculate the score for all possible alignments, and choose the one with the best score. In the case above, it would be the second one.&lt;/p&gt;
 &lt;p&gt;This method causes longer names to have better scores than smaller ones, because they simply have more matches. To remove the effect of name length on the score, we divide the best score by the length of the name.&lt;/p&gt;
 &lt;p&gt;Thus, the score we talked about is defined as:&lt;/p&gt;
@@ -241,7 +404,7 @@ score: -1
 &lt;h2&gt;Accurate Grid&lt;/h2&gt;
 &lt;p&gt;Right now, the grid is based on me saying some words and comparing how similar they sound to me. Instead, I should base my grid &lt;a href=&quot;https://en.wikipedia.org/wiki/International_Phonetic_Alphabet#Consonants&quot;&gt;off this chart&lt;/a&gt;, which could help me describe the closeness of two symbols based on phonetic properties.&lt;/p&gt;
 &lt;h2&gt;Neighboring-Letter Based Alignment&lt;/h2&gt;
-&lt;p&gt;Certain letters occur together more often than not, and my program does not take that into account while computing alignment scoring. Thus, the alignment scores should depend not only on the letter, but also its neighboring letters.&lt;/p&gt;</content><author><name></name></author><summary type="html">On NPC Names</summary></entry><entry><title type="html">First Post</title><link href="/www/2017/05/31/test_post.html" rel="alternate" type="text/html" title="First Post" /><published>2017-05-31T00:00:00+05:30</published><updated>2017-05-31T00:00:00+05:30</updated><id>/www/2017/05/31/test_post</id><content type="html" xml:base="/www/2017/05/31/test_post.html">&lt;p&gt;The main purpose of this post was to check styles and make sure that org-mode is working,
+&lt;p&gt;Certain letters occur together more often than not, and my program does not take that into account while computing alignment scoring. Thus, the alignment scores should depend not only on the letter, but also its neighboring letters.&lt;/p&gt;</content><author><name></name></author><summary type="html">On NPC Names</summary></entry><entry><title type="html">First Post</title><link href="http://127.0.0.1:4000//posts/2017/05/31/test_post.html" rel="alternate" type="text/html" title="First Post" /><published>2017-05-31T00:00:00+00:00</published><updated>2017-05-31T00:00:00+00:00</updated><id>http://127.0.0.1:4000//posts/2017/05/31/test_post</id><content type="html" xml:base="http://127.0.0.1:4000//posts/2017/05/31/test_post.html">&lt;p&gt;The main purpose of this post was to check styles and make sure that org-mode is working,
   and any scripts I use for posting run alright.&lt;/p&gt;
 &lt;p&gt;It has no real content, so there&amp;#8217;s no point to reading it, but thanks anyway.&lt;/p&gt;
 &lt;p&gt;If you&amp;#8217;re really interested in knowing who gets the Iron Throne, I would bet my dollar on the bastards.&lt;/p&gt;</content><author><name></name></author><summary type="html">The main purpose of this post was to check styles and make sure that org-mode is working, and any scripts I use for posting run alright.</summary></entry></feed>

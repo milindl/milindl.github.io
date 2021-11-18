@@ -250,13 +250,18 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 
    <style type ="text/css">
- @import 'https://fonts.googleapis.com/css?family=Amatic+SC|Crimson+Text|Open+Sans';
+ @import 'https://fonts.googleapis.com/css?family=Raleway|Crimson+Text|Open+Sans|Source+Code+Pro';
  body {
      z-index:500;
-     max-width: 960px;
-     font-family: 'Crimson Text';
+     max-width: 800px;
+     font-family: 'Open Sans', sans;
      margin: 0 auto;
      padding: 5px;
+     background-color: aliceblue;
+ }
+
+ img {
+     max-width: 800px;
  }
  h1, h2, h3, h4, h5, h6 {
      font-family: 'Open Sans', sans;
@@ -279,6 +284,81 @@
      margin: 2em;
      font-size: 1.5em;
  }
+.highlight pre {
+    font-weight: bold;
+    border: 0;
+    box-shadow: none;
+}
+.highlight .hll { background-color: #49483e }
+.highlight  { background: #272822; color: #f8f8f2 }
+.highlight .c { color: #75715e } /* Comment */
+.highlight .err { color: #960050; background-color: #1e0010 } /* Error */
+.highlight .k { color: #66d9ef } /* Keyword */
+.highlight .l { color: #ae81ff } /* Literal */
+.highlight .n { color: #f8f8f2 } /* Name */
+.highlight .o { color: #f92672 } /* Operator */
+.highlight .p { color: #f8f8f2 } /* Punctuation */
+.highlight .ch { color: #75715e } /* Comment.Hashbang */
+.highlight .cm { color: #75715e } /* Comment.Multiline */
+.highlight .cp { color: #75715e } /* Comment.Preproc */
+.highlight .cpf { color: #75715e } /* Comment.PreprocFile */
+.highlight .c1 { color: #75715e } /* Comment.Single */
+.highlight .cs { color: #75715e } /* Comment.Special */
+.highlight .gd { color: #f92672 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gi { color: #a6e22e } /* Generic.Inserted */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #75715e } /* Generic.Subheading */
+.highlight .kc { color: #66d9ef } /* Keyword.Constant */
+.highlight .kd { color: #66d9ef } /* Keyword.Declaration */
+.highlight .kn { color: #f92672 } /* Keyword.Namespace */
+.highlight .kp { color: #66d9ef } /* Keyword.Pseudo */
+.highlight .kr { color: #66d9ef } /* Keyword.Reserved */
+.highlight .kt { color: #66d9ef } /* Keyword.Type */
+.highlight .ld { color: #e6db74 } /* Literal.Date */
+.highlight .m { color: #ae81ff } /* Literal.Number */
+.highlight .s { color: #e6db74 } /* Literal.String */
+.highlight .na { color: #a6e22e } /* Name.Attribute */
+.highlight .nb { color: #f8f8f2 } /* Name.Builtin */
+.highlight .nc { color: #a6e22e } /* Name.Class */
+.highlight .no { color: #66d9ef } /* Name.Constant */
+.highlight .nd { color: #a6e22e } /* Name.Decorator */
+.highlight .ni { color: #f8f8f2 } /* Name.Entity */
+.highlight .ne { color: #a6e22e } /* Name.Exception */
+.highlight .nf { color: #a6e22e } /* Name.Function */
+.highlight .nl { color: #f8f8f2 } /* Name.Label */
+.highlight .nn { color: #f8f8f2 } /* Name.Namespace */
+.highlight .nx { color: #a6e22e } /* Name.Other */
+.highlight .py { color: #f8f8f2 } /* Name.Property */
+.highlight .nt { color: #f92672 } /* Name.Tag */
+.highlight .nv { color: #f8f8f2 } /* Name.Variable */
+.highlight .ow { color: #f92672 } /* Operator.Word */
+.highlight .w { color: #f8f8f2 } /* Text.Whitespace */
+.highlight .mb { color: #ae81ff } /* Literal.Number.Bin */
+.highlight .mf { color: #ae81ff } /* Literal.Number.Float */
+.highlight .mh { color: #ae81ff } /* Literal.Number.Hex */
+.highlight .mi { color: #ae81ff } /* Literal.Number.Integer */
+.highlight .mo { color: #ae81ff } /* Literal.Number.Oct */
+.highlight .sa { color: #e6db74 } /* Literal.String.Affix */
+.highlight .sb { color: #e6db74 } /* Literal.String.Backtick */
+.highlight .sc { color: #e6db74 } /* Literal.String.Char */
+.highlight .dl { color: #e6db74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #e6db74 } /* Literal.String.Doc */
+.highlight .s2 { color: #e6db74 } /* Literal.String.Double */
+.highlight .se { color: #ae81ff } /* Literal.String.Escape */
+.highlight .sh { color: #e6db74 } /* Literal.String.Heredoc */
+.highlight .si { color: #e6db74 } /* Literal.String.Interpol */
+.highlight .sx { color: #e6db74 } /* Literal.String.Other */
+.highlight .sr { color: #e6db74 } /* Literal.String.Regex */
+.highlight .s1 { color: #e6db74 } /* Literal.String.Single */
+.highlight .ss { color: #e6db74 } /* Literal.String.Symbol */
+.highlight .bp { color: #f8f8f2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #a6e22e } /* Name.Function.Magic */
+.highlight .vc { color: #f8f8f2 } /* Name.Variable.Class */
+.highlight .vg { color: #f8f8f2 } /* Name.Variable.Global */
+.highlight .vi { color: #f8f8f2 } /* Name.Variable.Instance */
+.highlight .vm { color: #f8f8f2 } /* Name.Variable.Magic */
+.highlight .il { color: #ae81ff } /* Literal.Number.Integer.Long */
 
 </style>
 
@@ -288,7 +368,7 @@
     <body>
       <header>
     <h1>
-        <a href="/www">Milind's Writeups</a>
+        <a href="/posts">Milind's Writeups</a>
     </h1>
 </header>
 
@@ -296,7 +376,7 @@
 
 <style type="text/css">
  header h1 {
-     font-family: Amatic SC;
+     font-family: Raleway, sans;
  }
  header h1 a {
      color: black;
@@ -307,15 +387,15 @@
       <div class="page-navigation">
     <div class="prev-container">
      
-      <a class="prev" href="/www/2017/05/31/test_post.html">&laquo; First Post</a>
+      <a class="prev" href="/posts/2017/05/31/test_post.html">&laquo; First Post</a>
       
     </div>
     <div class="up-container">
-        <a class="up" href="/www">Up</a>
+        <a class="up" href="/posts/">Up</a>
     </div>
     <div class="next-container">
      
-        <a class="next" href="/www/2017/09/06/Please_use_gdb.html">Please Use GDB &raquo;</a>
+        <a class="next" href="/posts/2017/09/06/Please_use_gdb.html">Please Use GDB &raquo;</a>
         
     </div>
 </div>
@@ -374,21 +454,18 @@
 <h1>Scoring Random Names</h1>
 <p>We&#8217;ve used <b>score</b> above as a measure of how close a name is to the &#8220;seed&#8221; name, but we&#8217;ve not discussed how to actually do this. A usual way of doing this is counting changes (number of additions, alterations and deletions needed to make the names same). I&#8217;ve done something similar, using <i>alignments</i>. I generate all the <i>alignments</i> of the two names and to score the best one.</p>
 <p>What is an alignment?</p>
-<pre class="src">
-m i l i n d
+<div class="highlight"><pre><span></span>m i l i n d
 + | | | | |
 n i l i n d
-</pre>
+</pre></div>
 <p>The alignment above attempts to align &#8220;milind&#8221; to &#8220;nilind&#8221;. The <code>|</code> denotes a <i>match</i>, while the <code>+</code> denotes a <i>mismatch</i>. A <i>mismatch</i> roughly hints towards an alteration.</p>
-<pre class="src">
-m i l i n d
+<div class="highlight"><pre><span></span>m i l i n d
 | _ | | | |
 m   l i n d
-</pre>
+</pre></div>
 <p>The alignment above attempts to align &#8220;milind&#8221; to &#8220;mlind&#8221;. The <code>|</code> denotes a <i>match</i>, while the <code>_</code> denotes a <i>gap</i>. A <i>gap</i> roughly hints towards an addition or a deletion.</p>
 <p>There can be many alignments for any two names. For instance, for &#8220;mil&#8221; and &#8220;lul&#8221;, all the three alignments given below are valid.</p>
-<pre class="src">
-m i l
+<div class="highlight"><pre><span></span>m i l
 _ _ | _ _
     l u l
 score: -3
@@ -402,7 +479,7 @@ m i l
 _ + + _
   l u l
 score: -1
-</pre>
+</pre></div>
 <p>Each of these alignments is assigned a score. For each <i>match</i>, an alignment is given 1 point. For each <i>mismatch</i>, an alignment is given 0.5 points, and for each <i>gap</i>, an alignment is given -1 points. We calculate the score for all possible alignments, and choose the one with the best score. In the case above, it would be the second one.</p>
 <p>This method causes longer names to have better scores than smaller ones, because they simply have more matches. To remove the effect of name length on the score, we divide the best score by the length of the name.</p>
 <p>Thus, the score we talked about is defined as:</p>
@@ -439,15 +516,15 @@ score: -1
       <div class="page-navigation">
     <div class="prev-container">
      
-      <a class="prev" href="/www/2017/05/31/test_post.html">&laquo; First Post</a>
+      <a class="prev" href="/posts/2017/05/31/test_post.html">&laquo; First Post</a>
       
     </div>
     <div class="up-container">
-        <a class="up" href="/www">Up</a>
+        <a class="up" href="/posts/">Up</a>
     </div>
     <div class="next-container">
      
-        <a class="next" href="/www/2017/09/06/Please_use_gdb.html">Please Use GDB &raquo;</a>
+        <a class="next" href="/posts/2017/09/06/Please_use_gdb.html">Please Use GDB &raquo;</a>
         
     </div>
 </div>
@@ -477,15 +554,13 @@ score: -1
     <section class="left">
         <ul>
             <li><a href="//milindl.org">milindl.org</a></li>
-            <li><a href="//github.com/milindl">github</a></li>
-            <li><a href="//facebook.com/milind.luthra">facebook</a></li>
-            <li>milindl [at] iitk.ac.in</li>
+            <li><a href="//github.com/milindl" target="_blank">github</a></li>
+            <li><a href="//linkedin.com/in/milind-luthra" target="_blank">linked</a></li>
         </ul>
     </section>
     <section class="right">
-        <p>Hello, I'm an undergraduate student at IIT Kanpur. I'm going to use these pages to document any interesting stuff I think of, or anything I write, really.
+        <p>Personal blog of Milind Luthra. All opinions here are my own.
 </p>
-        <p>Blog hosted at github pages :)</p>
     </section>
 </aside>
 

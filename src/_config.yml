@@ -15,11 +15,10 @@
 # in the templates via {{ site.myvariable }}.
 title: "Milind's Writeups"
 description: > # this means to ignore newlines until "baseurl:"
-  Hello, I'm an undergraduate student at IIT Kanpur.
-  I'm going to use these pages to document any interesting stuff I think of, or anything I
-  write, really.
-baseurl: "/www" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+  Personal blog of Milind Luthra.
+  All opinions here are my own.
+baseurl: "/posts" # the subpath of your site, e.g. /blog
+url: "http://127.0.0.1:4000/" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  milindl
 
 # Build settings
@@ -28,6 +27,8 @@ theme: minima
 gems:
   - jekyll-feed
   - jekyll-org-mode-converter
+include:
+  - "_img"
 exclude:
   - Gemfile
   - Gemfile.lock
