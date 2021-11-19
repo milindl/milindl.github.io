@@ -8,29 +8,30 @@ summary: I visualized my browsing history to see how different sites are interco
 
 * What I Wanted to See
 
-One might wonder, how I came across this idea, why I wanted to visualize my 
-browsing history in the first place.
-The answer - I don't remember. And that's often the case - it's not possible for
- me to remember what connections I made while coming to an idea.
+Can you remember the flow of your ideas?
 
-How an idea starts, and how it ends, and all the intermediate steps in between.
+How they originate, how they progress, and what they end up as?
 
-But even as it isn't possible for /ideas/, it's definitely possible for my 
-browsing habits. I /can/ tell how I end up finding interesting sites, I /can/
-tell how my browsing habits look like - if I always start typing some known 
-URLs, or do I jump deep from site to site.
+I can't. I don't even remember how I had this idea of visualizing my
+browsing history.
+
+But I /can/ know the flow of my Internet history.
+I /can/ tell how I end up finding interesting sites, I /can/
+tell how my browsing habits look like. 
+
+Do I always start typing some known URLs, or do I jump deep from site to site? 
+Are there sites I always "end up" on?
+
+------
 
 While the original idea - of tracking flow from URL to URL - is a good idea,
-it's not a great visualization. The graph would have 120,000+ nodes. 
+it's not a good visualization. The graph would have 120,000+ nodes. 
 And that's a lot of nodes.
 
 So rather than tracking flow from URL to URL, I decided to track my flow from 
 host to host.
 
 I decided to use *R*, with which I have only a passing familiarity.
-
-Here's what I needed to get started:
-
 
 * Getting the Data
 
@@ -260,4 +261,4 @@ history is just one or two levels deep.
 A lot of paths end up on Wikipedia.
 
 [[/www/assets/img/history_reddit.png]]
-Once I get to reddit, I find it difficult to leave.
+Once I get to reddit, I find it difficult to leave (see the big self-arrow?)

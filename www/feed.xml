@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2021-11-18T14:24:39+00:00</updated><id>/www/</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2021-11-19T05:34:28+00:00</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
 </subtitle><entry><title type="html">Visualizing my browsing history</title><link href="/www/2021/11/18/Visualizing_my_browsing_history.html" rel="alternate" type="text/html" title="Visualizing my browsing history" /><published>2021-11-18T00:00:00+00:00</published><updated>2021-11-18T00:00:00+00:00</updated><id>/www/2021/11/18/Visualizing_my_browsing_history</id><content type="html" xml:base="/www/2021/11/18/Visualizing_my_browsing_history.html">&lt;p&gt;&lt;img src=&quot;/www/assets/img/history_overview.png&quot; alt=&quot;/www/assets/img/history_overview.png&quot; /&gt;&lt;/p&gt;
 &lt;h1&gt;What I Wanted to See&lt;/h1&gt;
-&lt;p&gt;One might wonder, how I came across this idea, why I wanted to visualize my
-  browsing history in the first place.
-  The answer - I don&amp;#8217;t remember. And that&amp;#8217;s often the case - it&amp;#8217;s not possible for
-  me to remember what connections I made while coming to an idea.&lt;/p&gt;
-&lt;p&gt;How an idea starts, and how it ends, and all the intermediate steps in between.&lt;/p&gt;
-&lt;p&gt;But even as it isn&amp;#8217;t possible for &lt;i&gt;ideas&lt;/i&gt;, it&amp;#8217;s definitely possible for my
-  browsing habits. I &lt;i&gt;can&lt;/i&gt; tell how I end up finding interesting sites, I &lt;i&gt;can&lt;/i&gt;
-  tell how my browsing habits look like - if I always start typing some known
-  URLs, or do I jump deep from site to site.&lt;/p&gt;
+&lt;p&gt;Can you remember the flow of your ideas?&lt;/p&gt;
+&lt;p&gt;How they originate, how they progress, and what they end up as?&lt;/p&gt;
+&lt;p&gt;I can&amp;#8217;t. I don&amp;#8217;t even remember how I had this idea of visualizing my
+  browsing history.&lt;/p&gt;
+&lt;p&gt;But I &lt;i&gt;can&lt;/i&gt; know the flow of my Internet history.
+  I &lt;i&gt;can&lt;/i&gt; tell how I end up finding interesting sites, I &lt;i&gt;can&lt;/i&gt;
+  tell how my browsing habits look like.&lt;/p&gt;
+&lt;p&gt;Do I always start typing some known URLs, or do I jump deep from site to site?
+  Are there sites I always &amp;#8220;end up&amp;#8221; on?&lt;/p&gt;
+&lt;hr /&gt;
 &lt;p&gt;While the original idea - of tracking flow from URL to URL - is a good idea,
-  it&amp;#8217;s not a great visualization. The graph would have 120,000+ nodes.
+  it&amp;#8217;s not a good visualization. The graph would have 120,000+ nodes.
   And that&amp;#8217;s a lot of nodes.&lt;/p&gt;
 &lt;p&gt;So rather than tracking flow from URL to URL, I decided to track my flow from
   host to host.&lt;/p&gt;
 &lt;p&gt;I decided to use &lt;b&gt;R&lt;/b&gt;, with which I have only a passing familiarity.&lt;/p&gt;
-&lt;p&gt;Here&amp;#8217;s what I needed to get started:&lt;/p&gt;
 &lt;h1&gt;Getting the Data&lt;/h1&gt;
 &lt;p&gt;I primarily use Firefox, and Firefox stores my browsing history in a SQLite
   database - &lt;code&gt;places.sqlite&lt;/code&gt;. It&amp;#8217;s made per-profile, and for my Windows machine,
@@ -178,7 +178,7 @@
 &lt;p&gt;&lt;img src=&quot;/www/assets/img/history_wiki.png&quot; alt=&quot;/www/assets/img/history_wiki.png&quot; /&gt;
   A lot of paths end up on Wikipedia.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/www/assets/img/history_reddit.png&quot; alt=&quot;/www/assets/img/history_reddit.png&quot; /&gt;
-  Once I get to reddit, I find it difficult to leave.&lt;/p&gt;</content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">Please Use GDB</title><link href="/www/2017/09/06/Please_use_gdb.html" rel="alternate" type="text/html" title="Please Use GDB" /><published>2017-09-06T00:00:00+00:00</published><updated>2017-09-06T00:00:00+00:00</updated><id>/www/2017/09/06/Please_use_gdb</id><content type="html" xml:base="/www/2017/09/06/Please_use_gdb.html">&lt;p&gt;&lt;i&gt;What this is not&lt;/i&gt;: a complete guide to &lt;code&gt;gdb&lt;/code&gt;. There are plenty of those
+  Once I get to reddit, I find it difficult to leave (see the big self-arrow?)&lt;/p&gt;</content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">Please Use GDB</title><link href="/www/2017/09/06/Please_use_gdb.html" rel="alternate" type="text/html" title="Please Use GDB" /><published>2017-09-06T00:00:00+00:00</published><updated>2017-09-06T00:00:00+00:00</updated><id>/www/2017/09/06/Please_use_gdb</id><content type="html" xml:base="/www/2017/09/06/Please_use_gdb.html">&lt;p&gt;&lt;i&gt;What this is not&lt;/i&gt;: a complete guide to &lt;code&gt;gdb&lt;/code&gt;. There are plenty of those
   online.
   This is primarily an opinion/experience piece on why &lt;i&gt;I&lt;/i&gt; find &lt;code&gt;gdb&lt;/code&gt; to be essential. There
   is &lt;i&gt;some&lt;/i&gt; usage instruction, but that is to enable anyone to follow along.&lt;/p&gt;
