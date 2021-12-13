@@ -26,7 +26,7 @@ Are there sites I always "end up" on?
 
 While the original idea - of tracking flow from URL to URL - is a good idea,
 it's not a good visualization. To give you an idea, the graph for my history would have 120,000+ nodes. 
-And thats A LOT OF NODES! 
+And that's A LOT OF NODES! 
 
 So rather than tracking flow from URL to URL, I decided to track the flow from 
 host to host.
