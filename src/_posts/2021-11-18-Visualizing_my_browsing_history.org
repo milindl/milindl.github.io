@@ -6,11 +6,11 @@ summary: I visualized my browsing history to see how different sites are interco
 
 [[/www/assets/img/history_overview.png]]
 
-* What I Wanted to See
+* Motivation
 
 Can you remember the flow of your ideas?
 
-How they originate, how they progress, and what they end up as?
+How do they originate, how they progress, and what do they end up as?
 
 I can't. I don't even remember how I had this idea of visualizing my
 browsing history.
@@ -25,10 +25,10 @@ Are there sites I always "end up" on?
 ------
 
 While the original idea - of tracking flow from URL to URL - is a good idea,
-it's not a good visualization. The graph would have 120,000+ nodes. 
-And that's a lot of nodes.
+it's not a good visualization. To give you an idea, the graph for my history would have 120,000+ nodes. 
+And that's A LOT OF NODES! 
 
-So rather than tracking flow from URL to URL, I decided to track my flow from 
+So rather than tracking flow from URL to URL, I decided to track the flow from 
 host to host.
 
 I decided to use *R*, with which I have only a passing familiarity.
@@ -40,7 +40,7 @@ database - ~places.sqlite~. It's made per-profile, and for my Windows machine,
 it was located at 
 ~C:\Users\<username>\AppData\Roaming\Mozilla\Firefox\Profiles\<profile name>\places.sqlite~.
 
-To avoid any accidents, I made a copy and worked on that.
+To keep my browing history database safe from any corruption, I made a copy to work on:
 
 #+BEGIN_SRC R
 con <- dbConnect(RSQLite::SQLite(), "C:/Users/Milind/Documents/places_snapshot.sqlite")
@@ -96,7 +96,7 @@ res <- dbSendQuery(con, "select p1.rev_host as target_host, \"bat_wen\" as sourc
 t2 <- dbFetch(res)
 #+END_SRC
 
-You'll notice that I have reversed "new_tab" in the above query - that's to make
+Notice that I have reversed "new_tab" in the above query - that's to make
 it identical to the other hosts we are fetching.
 
 The hostnames are stored in the tables in the ~rev_host~ column - and they're
@@ -125,10 +125,10 @@ Here's the result:
 
 * Converting it to a Graph
 
-Luckily, R has a few handy packages/primitives that help us convert this data
+R has a few handy packages/primitives that help us convert this data
 into a directed graph.
 
-I have a habit of searching for tech questions on google, and then clicking
+But there is a problem. I have a habit of searching for tech questions on google, and then clicking
 the stackoverflow link - a lot of times. That means there are a lot of edges from
 google to stackoverflow.
 
@@ -179,7 +179,7 @@ E(g2)$weight = sapply(E(g2), function(e) {
 
 * Plotting the Graph 
 
-There are a few more adjustments we need to make before the graph looks nice.
+We should make a few more adjustments to make the graph nicer.
 
 First, we need to convert the weights of the edges into two values - one, the
 thickness of the edge drawn on screen, and second, the color.
