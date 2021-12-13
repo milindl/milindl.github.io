@@ -40,7 +40,7 @@ database - ~places.sqlite~. It's made per-profile, and for my Windows machine,
 it was located at 
 ~C:\Users\<username>\AppData\Roaming\Mozilla\Firefox\Profiles\<profile name>\places.sqlite~.
 
-To keep my browing history database safe from any corruptions, I made a copy to work on:
+To keep my browing history database safe from any corruption, I made a copy to work on:
 
 #+BEGIN_SRC R
 con <- dbConnect(RSQLite::SQLite(), "C:/Users/Milind/Documents/places_snapshot.sqlite")
