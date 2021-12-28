@@ -444,7 +444,7 @@
   host to host.</p>
 <p>I decided to use <b>R</b>, with which I have only a passing familiarity.</p>
 <h1>Getting the Data</h1>
-<p>For the graph I have in mind, I need data which looks like this:</p>
+<p>For the graph I had in mind, I needed data which looked like this:</p>
 <div class="highlight"><pre><span></span>to: milindl.org, from: google.com, times: 20
 to: google.com, from: facebook.com, times: 10
 to: facebook.com, from: twitter.com, times: 5
@@ -456,7 +456,7 @@ to: facebook.com, from: twitter.com, times: 5
   it was located at
   <code>C:\Users\&lt;username&gt;\AppData\Roaming\Mozilla\Firefox\Profiles\&lt;profile name&gt;\places.sqlite</code>.</p>
 <p>You can locate your own <code>places.sqlite</code> file using the instructions given <a href="https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data">here</a> -
-  only if you&#8217;re Firefox like me. The entire process of getting the data if you&#8217;re using Chrome will be different (and not documented here).</p>
+  only if you&#8217;re using Firefox like me. The entire process of getting the data if you&#8217;re using Chrome will be different (and not documented here).</p>
 <p>To keep my browing history database safe from any corruption, I made a copy to work on:</p>
 <div class="highlight"><pre><span></span><span class="n">con</span> <span class="o">&lt;-</span> <span class="nf">dbConnect</span><span class="p">(</span><span class="n">RSQLite</span><span class="o">::</span><span class="nf">SQLite</span><span class="p">(),</span> <span class="s">&quot;C:/Users/Milind/Documents/places_snapshot.sqlite&quot;</span><span class="p">)</span>
 </pre></div>

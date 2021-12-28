@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2021-12-28T14:10:08+00:00</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2021-12-28T14:14:43+00:00</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
 </subtitle><entry><title type="html">Visualizing my browsing history</title><link href="/www/2021/11/18/Visualizing_my_browsing_history.html" rel="alternate" type="text/html" title="Visualizing my browsing history" /><published>2021-11-18T00:00:00+00:00</published><updated>2021-11-18T00:00:00+00:00</updated><id>/www/2021/11/18/Visualizing_my_browsing_history</id><content type="html" xml:base="/www/2021/11/18/Visualizing_my_browsing_history.html">&lt;p&gt;&lt;img src=&quot;/www/assets/img/history_overview.png&quot; alt=&quot;/www/assets/img/history_overview.png&quot; /&gt;&lt;/p&gt;
 &lt;h1&gt;Motivation&lt;/h1&gt;
 &lt;p&gt;Can you remember the flow of your ideas?&lt;/p&gt;
@@ -18,7 +18,7 @@
   host to host.&lt;/p&gt;
 &lt;p&gt;I decided to use &lt;b&gt;R&lt;/b&gt;, with which I have only a passing familiarity.&lt;/p&gt;
 &lt;h1&gt;Getting the Data&lt;/h1&gt;
-&lt;p&gt;For the graph I have in mind, I need data which looks like this:&lt;/p&gt;
+&lt;p&gt;For the graph I had in mind, I needed data which looked like this:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;to: milindl.org, from: google.com, times: 20
 to: google.com, from: facebook.com, times: 10
 to: facebook.com, from: twitter.com, times: 5
@@ -30,7 +30,7 @@ to: facebook.com, from: twitter.com, times: 5
   it was located at
   &lt;code&gt;C:\Users\&amp;lt;username&amp;gt;\AppData\Roaming\Mozilla\Firefox\Profiles\&amp;lt;profile name&amp;gt;\places.sqlite&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;You can locate your own &lt;code&gt;places.sqlite&lt;/code&gt; file using the instructions given &lt;a href=&quot;https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data&quot;&gt;here&lt;/a&gt; -
-  only if you&amp;#8217;re Firefox like me. The entire process of getting the data if you&amp;#8217;re using Chrome will be different (and not documented here).&lt;/p&gt;
+  only if you&amp;#8217;re using Firefox like me. The entire process of getting the data if you&amp;#8217;re using Chrome will be different (and not documented here).&lt;/p&gt;
 &lt;p&gt;To keep my browing history database safe from any corruption, I made a copy to work on:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbConnect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RSQLite&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;SQLite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C:/Users/Milind/Documents/places_snapshot.sqlite&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;

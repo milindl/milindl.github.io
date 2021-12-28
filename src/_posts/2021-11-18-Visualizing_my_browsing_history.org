@@ -35,7 +35,7 @@ I decided to use *R*, with which I have only a passing familiarity.
 
 * Getting the Data
 
-For the graph I have in mind, I need data which looks like this:
+For the graph I had in mind, I needed data which looked like this:
 
 #+BEGIN_SRC
 to: milindl.org, from: google.com, times: 20
@@ -52,7 +52,7 @@ it was located at
 ~C:\Users\<username>\AppData\Roaming\Mozilla\Firefox\Profiles\<profile name>\places.sqlite~.
 
 You can locate your own ~places.sqlite~ file using the instructions given [[https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data][here]] -
-only if you're Firefox like me. The entire process of getting the data if you're using Chrome will be different (and not documented here).
+only if you're using Firefox like me. The entire process of getting the data if you're using Chrome will be different (and not documented here).
 
 To keep my browing history database safe from any corruption, I made a copy to work on:
 
