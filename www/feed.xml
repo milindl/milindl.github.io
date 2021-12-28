@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2021-12-13T14:50:02+00:00</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2021-12-28T14:10:08+00:00</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
 </subtitle><entry><title type="html">Visualizing my browsing history</title><link href="/www/2021/11/18/Visualizing_my_browsing_history.html" rel="alternate" type="text/html" title="Visualizing my browsing history" /><published>2021-11-18T00:00:00+00:00</published><updated>2021-11-18T00:00:00+00:00</updated><id>/www/2021/11/18/Visualizing_my_browsing_history</id><content type="html" xml:base="/www/2021/11/18/Visualizing_my_browsing_history.html">&lt;p&gt;&lt;img src=&quot;/www/assets/img/history_overview.png&quot; alt=&quot;/www/assets/img/history_overview.png&quot; /&gt;&lt;/p&gt;
-&lt;h1&gt;What I Wanted to See&lt;/h1&gt;
+&lt;h1&gt;Motivation&lt;/h1&gt;
 &lt;p&gt;Can you remember the flow of your ideas?&lt;/p&gt;
-&lt;p&gt;How they originate, how they progress, and what they end up as?&lt;/p&gt;
+&lt;p&gt;How do they originate, how they progress, and what do they end up as?&lt;/p&gt;
 &lt;p&gt;I can&amp;#8217;t. I don&amp;#8217;t even remember how I had this idea of visualizing my
   browsing history.&lt;/p&gt;
 &lt;p&gt;But I &lt;i&gt;can&lt;/i&gt; know the flow of my Internet history.
@@ -12,33 +12,60 @@
   Are there sites I always &amp;#8220;end up&amp;#8221; on?&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;While the original idea - of tracking flow from URL to URL - is a good idea,
-  it&amp;#8217;s not a good visualization. The graph would have 120,000+ nodes.
-  And that&amp;#8217;s a lot of nodes.&lt;/p&gt;
-&lt;p&gt;So rather than tracking flow from URL to URL, I decided to track my flow from
+  it&amp;#8217;s not a good visualization. To give you an idea, the graph for my history would have 120,000+ nodes.
+  And that&amp;#8217;s A LOT OF NODES!&lt;/p&gt;
+&lt;p&gt;So rather than tracking flow from URL to URL, I decided to track the flow from
   host to host.&lt;/p&gt;
 &lt;p&gt;I decided to use &lt;b&gt;R&lt;/b&gt;, with which I have only a passing familiarity.&lt;/p&gt;
 &lt;h1&gt;Getting the Data&lt;/h1&gt;
+&lt;p&gt;For the graph I have in mind, I need data which looks like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;to: milindl.org, from: google.com, times: 20
+to: google.com, from: facebook.com, times: 10
+to: facebook.com, from: twitter.com, times: 5
+(...continued)
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With this structure of the data in mind, I set out to extract it from my browser.&lt;/p&gt;
 &lt;p&gt;I primarily use Firefox, and Firefox stores my browsing history in a SQLite
   database - &lt;code&gt;places.sqlite&lt;/code&gt;. It&amp;#8217;s made per-profile, and for my Windows machine,
   it was located at
   &lt;code&gt;C:\Users\&amp;lt;username&amp;gt;\AppData\Roaming\Mozilla\Firefox\Profiles\&amp;lt;profile name&amp;gt;\places.sqlite&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;To avoid any accidents, I made a copy and worked on that.&lt;/p&gt;
+&lt;p&gt;You can locate your own &lt;code&gt;places.sqlite&lt;/code&gt; file using the instructions given &lt;a href=&quot;https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data&quot;&gt;here&lt;/a&gt; -
+  only if you&amp;#8217;re Firefox like me. The entire process of getting the data if you&amp;#8217;re using Chrome will be different (and not documented here).&lt;/p&gt;
+&lt;p&gt;To keep my browing history database safe from any corruption, I made a copy to work on:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbConnect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RSQLite&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;SQLite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C:/Users/Milind/Documents/places_snapshot.sqlite&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The schema of the database is available &lt;a href=&quot;https://wiki.mozilla.org/images/d/d5/Places.sqlite.schema3.pdf&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The table &lt;code&gt;moz_places&lt;/code&gt; contains a list of all pages I&amp;#8217;ve ever visited.&lt;/p&gt;
+&lt;p&gt;The table &lt;code&gt;moz_places&lt;/code&gt; contains a list of all pages I&amp;#8217;ve ever visited, along with some data about each page (including the hostname).
+  However, it doesn&amp;#8217;t maintain any information about the time(s) I have visited a page.
+  No matter how many times I visit milindl.org, it appears only once in &lt;code&gt;moz_places&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The table &lt;code&gt;moz_historyvisits&lt;/code&gt; contains information about every visit to a page:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;the id of the page itself, a reference to the page in the table &lt;code&gt;moz_places&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;the page from which I came to this page - to track the &amp;#8220;flow&amp;#8221;&lt;/li&gt;
+  &lt;li&gt;an id - a numeric primary key&lt;/li&gt;
+  &lt;li&gt;a reference &lt;code&gt;place_id&lt;/code&gt; which helps me get details about the page visited - a foreign key to &lt;code&gt;moz_places&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;a reference &lt;code&gt;from_visit&lt;/code&gt; to the previous &amp;#8220;visit&amp;#8221; from which I came to this &amp;#8220;visit&amp;#8221; - a foreign key to &lt;code&gt;moz_historyvisits&lt;/code&gt; itself&lt;/li&gt;
   &lt;li&gt;a &lt;code&gt;visit_type&lt;/code&gt;, an integer which determines how I ended up on this page&lt;/li&gt;
+  &lt;li&gt;timestamp, etc.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;It took some additional code reading to understand what each &lt;code&gt;visit_type&lt;/code&gt;
   corresponded to - each corresponds to a transition type, found in the file
   &lt;a href=&quot;https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/places/nsINavHistoryService.idl#l946&quot;&gt;nsINavHistoryService.idl&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are (for the most part) two ways I might visit a page. Either I click on a link which leads to that page,
+  or else I type the URL of the page into the address bar of the browser manually.&lt;/p&gt;
+&lt;p&gt;Clicking a link corresponds to a &lt;code&gt;visit_type&lt;/code&gt; of &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Typing the URL corresponds to a &lt;code&gt;visit_type&lt;/code&gt; of &lt;code&gt;2&lt;/code&gt;. For this &lt;code&gt;visit_type&lt;/code&gt;, no &lt;code&gt;from_visit&lt;/code&gt; is stored because I did not come from a previous visit.&lt;/p&gt;
+&lt;p&gt;Let&amp;#8217;s look at an example for this:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;I type &amp;#8220;http://www.milindl.org/xyz&amp;#8221; into the address bar.&lt;/li&gt;
+  &lt;li&gt;I click on a link on the page in (1) which points to &amp;#8220;http://www.example.com&amp;#8221;.&lt;/li&gt;
+  &lt;li&gt;I click on a link on the page in (2) which points back to &amp;#8220;http://www.milindl.org/xyz&amp;#8221;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That sequence would generate the following data:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/www/assets/img/moz_places_illustration.png&quot; alt=&quot;/www/assets/img/moz_places_illustration.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;Note that the hostnames are stored in the &lt;code&gt;moz_places&lt;/code&gt; table in the &lt;code&gt;rev_host&lt;/code&gt; column - and they&amp;#8217;re
+  reversed. So, to get the actual hostnames, we need to reverse them later.&lt;/p&gt;
 &lt;p&gt;Putting this information together, we need two queries to get the data.&lt;/p&gt;
-&lt;p&gt;First, a query to get the list of all pages I have visited by clicking links.&lt;/p&gt;
-&lt;p&gt;That corresponds to a &lt;code&gt;visit_type&lt;/code&gt; of &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;First, a query to get the list of all pages I have visited by clicking links. In this case, both
+  &lt;code&gt;to&lt;/code&gt; and &lt;code&gt;from&lt;/code&gt; are available in the tables.&lt;/p&gt;
 &lt;p&gt;We extract both the source (where I clicked the link) and target (the page I
   ended up on after clicking the link).&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbSendQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;select p1.rev_host as target_host, p2.rev_host as source_host &lt;/span&gt;
@@ -51,9 +78,9 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Second, a query to get a list of all the pages I have visited by typing them in
   the address bar.&lt;/p&gt;
-&lt;p&gt;That corresponds to a &lt;code&gt;visit_type&lt;/code&gt; of &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;In this case, Firefox doesn&amp;#8217;t save a source, so we use the a constant source,
-  &amp;#8220;new_tab&amp;#8221;.&lt;/p&gt;
+  &amp;#8220;new_tab&amp;#8221;. So, every page visited by typing the URL in the address bar has its &lt;code&gt;from&lt;/code&gt;
+  set as &amp;#8220;new_tab&amp;#8221;.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbSendQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;select p1.rev_host as target_host, \&amp;quot;bat_wen\&amp;quot; as source_host&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;    from moz_historyvisits h1&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;    join moz_places p1 on h1.place_id == p1.id&lt;/span&gt;
@@ -61,11 +88,8 @@
 &lt;span class=&quot;s&quot;&gt;    order by h1.visit_date desc;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;t2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dbFetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;You&amp;#8217;ll notice that I have reversed &amp;#8220;new_tab&amp;#8221; in the above query - that&amp;#8217;s to make
-  it identical to the other hosts we are fetching.&lt;/p&gt;
-&lt;p&gt;The hostnames are stored in the tables in the &lt;code&gt;rev_host&lt;/code&gt; column - and they&amp;#8217;re
-  reversed. So, to get the actual hostnames, we need to reverse them, and join
-  the two different types of data above.&lt;/p&gt;
+&lt;p&gt;Notice that I have reversed &amp;#8220;new_tab&amp;#8221; in the above query - that&amp;#8217;s to make
+  it identical to the other hosts we are fetching, so we can reverse them together.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# Merge and clean the data.&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rbind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;source_host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stringi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stri_reverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;source_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -82,12 +106,12 @@
 5  .www.r-project.org .cran.r-project.org
 6  .www.r-project.org .cran.r-project.org
 &lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We haven&amp;#8217;t yet aggregated the data, so there are repeated entries. We will do that later in this post.&lt;/p&gt;
 &lt;h1&gt;Converting it to a Graph&lt;/h1&gt;
-&lt;p&gt;Luckily, R has a few handy packages/primitives that help us convert this data
+&lt;p&gt;R has a few handy packages/primitives that help us convert this data
   into a directed graph.&lt;/p&gt;
-&lt;p&gt;I have a habit of searching for tech questions on google, and then clicking
-  the stackoverflow link - a lot of times. That means there are a lot of edges from
-  google to stackoverflow.&lt;/p&gt;
+&lt;p&gt;But there is a problem - since we haven&amp;#8217;t yet aggregated the data, there are repeated entries, which will
+  lead to multiple edges from the same source to the same target.&lt;/p&gt;
 &lt;p&gt;This looks quite bad - rather than multiple edges from one host to another, I would
   want to show a thicker/darker edge.  So, for now, we remove all the duplicate edges.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;graph_from_data_frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -122,7 +146,7 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h1&gt;Plotting the Graph&lt;/h1&gt;
-&lt;p&gt;There are a few more adjustments we need to make before the graph looks nice.&lt;/p&gt;
+&lt;p&gt;We should make a few more adjustments to make the graph nicer.&lt;/p&gt;
 &lt;p&gt;First, we need to convert the weights of the edges into two values - one, the
   thickness of the edge drawn on screen, and second, the color.&lt;/p&gt;
 &lt;p&gt;The edge weight distribution is quite skewed - there are a lot of edges weighted

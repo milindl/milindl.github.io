@@ -426,9 +426,9 @@
         <section class="page-wrapper">
             <h1>Visualizing my browsing history</h1>
             <p><img src="/www/assets/img/history_overview.png" alt="/www/assets/img/history_overview.png" /></p>
-<h1>What I Wanted to See</h1>
+<h1>Motivation</h1>
 <p>Can you remember the flow of your ideas?</p>
-<p>How they originate, how they progress, and what they end up as?</p>
+<p>How do they originate, how they progress, and what do they end up as?</p>
 <p>I can&#8217;t. I don&#8217;t even remember how I had this idea of visualizing my
   browsing history.</p>
 <p>But I <i>can</i> know the flow of my Internet history.
@@ -438,33 +438,60 @@
   Are there sites I always &#8220;end up&#8221; on?</p>
 <hr />
 <p>While the original idea - of tracking flow from URL to URL - is a good idea,
-  it&#8217;s not a good visualization. The graph would have 120,000+ nodes.
-  And that&#8217;s a lot of nodes.</p>
-<p>So rather than tracking flow from URL to URL, I decided to track my flow from
+  it&#8217;s not a good visualization. To give you an idea, the graph for my history would have 120,000+ nodes.
+  And that&#8217;s A LOT OF NODES!</p>
+<p>So rather than tracking flow from URL to URL, I decided to track the flow from
   host to host.</p>
 <p>I decided to use <b>R</b>, with which I have only a passing familiarity.</p>
 <h1>Getting the Data</h1>
+<p>For the graph I have in mind, I need data which looks like this:</p>
+<div class="highlight"><pre><span></span>to: milindl.org, from: google.com, times: 20
+to: google.com, from: facebook.com, times: 10
+to: facebook.com, from: twitter.com, times: 5
+(...continued)
+</pre></div>
+<p>With this structure of the data in mind, I set out to extract it from my browser.</p>
 <p>I primarily use Firefox, and Firefox stores my browsing history in a SQLite
   database - <code>places.sqlite</code>. It&#8217;s made per-profile, and for my Windows machine,
   it was located at
   <code>C:\Users\&lt;username&gt;\AppData\Roaming\Mozilla\Firefox\Profiles\&lt;profile name&gt;\places.sqlite</code>.</p>
-<p>To avoid any accidents, I made a copy and worked on that.</p>
+<p>You can locate your own <code>places.sqlite</code> file using the instructions given <a href="https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data">here</a> -
+  only if you&#8217;re Firefox like me. The entire process of getting the data if you&#8217;re using Chrome will be different (and not documented here).</p>
+<p>To keep my browing history database safe from any corruption, I made a copy to work on:</p>
 <div class="highlight"><pre><span></span><span class="n">con</span> <span class="o">&lt;-</span> <span class="nf">dbConnect</span><span class="p">(</span><span class="n">RSQLite</span><span class="o">::</span><span class="nf">SQLite</span><span class="p">(),</span> <span class="s">&quot;C:/Users/Milind/Documents/places_snapshot.sqlite&quot;</span><span class="p">)</span>
 </pre></div>
 <p>The schema of the database is available <a href="https://wiki.mozilla.org/images/d/d5/Places.sqlite.schema3.pdf">here</a>.</p>
-<p>The table <code>moz_places</code> contains a list of all pages I&#8217;ve ever visited.</p>
+<p>The table <code>moz_places</code> contains a list of all pages I&#8217;ve ever visited, along with some data about each page (including the hostname).
+  However, it doesn&#8217;t maintain any information about the time(s) I have visited a page.
+  No matter how many times I visit milindl.org, it appears only once in <code>moz_places</code>.</p>
 <p>The table <code>moz_historyvisits</code> contains information about every visit to a page:</p>
 <ul>
-  <li>the id of the page itself, a reference to the page in the table <code>moz_places</code></li>
-  <li>the page from which I came to this page - to track the &#8220;flow&#8221;</li>
+  <li>an id - a numeric primary key</li>
+  <li>a reference <code>place_id</code> which helps me get details about the page visited - a foreign key to <code>moz_places</code></li>
+  <li>a reference <code>from_visit</code> to the previous &#8220;visit&#8221; from which I came to this &#8220;visit&#8221; - a foreign key to <code>moz_historyvisits</code> itself</li>
   <li>a <code>visit_type</code>, an integer which determines how I ended up on this page</li>
+  <li>timestamp, etc.</li>
 </ul>
 <p>It took some additional code reading to understand what each <code>visit_type</code>
   corresponded to - each corresponds to a transition type, found in the file
   <a href="https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/places/nsINavHistoryService.idl#l946">nsINavHistoryService.idl</a>.</p>
+<p>There are (for the most part) two ways I might visit a page. Either I click on a link which leads to that page,
+  or else I type the URL of the page into the address bar of the browser manually.</p>
+<p>Clicking a link corresponds to a <code>visit_type</code> of <code>1</code>.</p>
+<p>Typing the URL corresponds to a <code>visit_type</code> of <code>2</code>. For this <code>visit_type</code>, no <code>from_visit</code> is stored because I did not come from a previous visit.</p>
+<p>Let&#8217;s look at an example for this:</p>
+<ol>
+  <li>I type &#8220;http://www.milindl.org/xyz&#8221; into the address bar.</li>
+  <li>I click on a link on the page in (1) which points to &#8220;http://www.example.com&#8221;.</li>
+  <li>I click on a link on the page in (2) which points back to &#8220;http://www.milindl.org/xyz&#8221;.</li>
+</ol>
+<p>That sequence would generate the following data:</p>
+<p><img src="/www/assets/img/moz_places_illustration.png" alt="/www/assets/img/moz_places_illustration.png" /></p>
+<p>Note that the hostnames are stored in the <code>moz_places</code> table in the <code>rev_host</code> column - and they&#8217;re
+  reversed. So, to get the actual hostnames, we need to reverse them later.</p>
 <p>Putting this information together, we need two queries to get the data.</p>
-<p>First, a query to get the list of all pages I have visited by clicking links.</p>
-<p>That corresponds to a <code>visit_type</code> of <code>1</code>.</p>
+<p>First, a query to get the list of all pages I have visited by clicking links. In this case, both
+  <code>to</code> and <code>from</code> are available in the tables.</p>
 <p>We extract both the source (where I clicked the link) and target (the page I
   ended up on after clicking the link).</p>
 <div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">&lt;-</span> <span class="nf">dbSendQuery</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="s">&quot;select p1.rev_host as target_host, p2.rev_host as source_host </span>
@@ -477,9 +504,9 @@
 </pre></div>
 <p>Second, a query to get a list of all the pages I have visited by typing them in
   the address bar.</p>
-<p>That corresponds to a <code>visit_type</code> of <code>2</code>.</p>
 <p>In this case, Firefox doesn&#8217;t save a source, so we use the a constant source,
-  &#8220;new_tab&#8221;.</p>
+  &#8220;new_tab&#8221;. So, every page visited by typing the URL in the address bar has its <code>from</code>
+  set as &#8220;new_tab&#8221;.</p>
 <div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">&lt;-</span> <span class="nf">dbSendQuery</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="s">&quot;select p1.rev_host as target_host, \&quot;bat_wen\&quot; as source_host</span>
 <span class="s">    from moz_historyvisits h1</span>
 <span class="s">    join moz_places p1 on h1.place_id == p1.id</span>
@@ -487,11 +514,8 @@
 <span class="s">    order by h1.visit_date desc;&quot;</span><span class="p">)</span>
 <span class="n">t2</span> <span class="o">&lt;-</span> <span class="nf">dbFetch</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
-<p>You&#8217;ll notice that I have reversed &#8220;new_tab&#8221; in the above query - that&#8217;s to make
-  it identical to the other hosts we are fetching.</p>
-<p>The hostnames are stored in the tables in the <code>rev_host</code> column - and they&#8217;re
-  reversed. So, to get the actual hostnames, we need to reverse them, and join
-  the two different types of data above.</p>
+<p>Notice that I have reversed &#8220;new_tab&#8221; in the above query - that&#8217;s to make
+  it identical to the other hosts we are fetching, so we can reverse them together.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Merge and clean the data.</span>
 <span class="n">t</span> <span class="o">&lt;-</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
 <span class="n">t</span><span class="o">$</span><span class="n">source_host</span> <span class="o">=</span> <span class="n">stringi</span><span class="o">::</span><span class="nf">stri_reverse</span><span class="p">(</span><span class="n">t</span><span class="o">$</span><span class="n">source_host</span><span class="p">)</span>
@@ -508,12 +532,12 @@
 5  .www.r-project.org .cran.r-project.org
 6  .www.r-project.org .cran.r-project.org
 </pre></div>
+<p>We haven&#8217;t yet aggregated the data, so there are repeated entries. We will do that later in this post.</p>
 <h1>Converting it to a Graph</h1>
-<p>Luckily, R has a few handy packages/primitives that help us convert this data
+<p>R has a few handy packages/primitives that help us convert this data
   into a directed graph.</p>
-<p>I have a habit of searching for tech questions on google, and then clicking
-  the stackoverflow link - a lot of times. That means there are a lot of edges from
-  google to stackoverflow.</p>
+<p>But there is a problem - since we haven&#8217;t yet aggregated the data, there are repeated entries, which will
+  lead to multiple edges from the same source to the same target.</p>
 <p>This looks quite bad - rather than multiple edges from one host to another, I would
   want to show a thicker/darker edge.  So, for now, we remove all the duplicate edges.</p>
 <div class="highlight"><pre><span></span><span class="n">g1</span> <span class="o">=</span> <span class="nf">graph_from_data_frame</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -548,7 +572,7 @@
 <span class="p">}</span> <span class="p">)</span>
 </pre></div>
 <h1>Plotting the Graph</h1>
-<p>There are a few more adjustments we need to make before the graph looks nice.</p>
+<p>We should make a few more adjustments to make the graph nicer.</p>
 <p>First, we need to convert the weights of the edges into two values - one, the
   thickness of the edge drawn on screen, and second, the color.</p>
 <p>The edge weight distribution is quite skewed - there are a lot of edges weighted

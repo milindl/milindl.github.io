@@ -35,10 +35,24 @@ I decided to use *R*, with which I have only a passing familiarity.
 
 * Getting the Data
 
+For the graph I have in mind, I need data which looks like this:
+
+#+BEGIN_SRC
+to: milindl.org, from: google.com, times: 20
+to: google.com, from: facebook.com, times: 10
+to: facebook.com, from: twitter.com, times: 5
+(...continued)
+#+END_SRC
+
+With this structure of the data in mind, I set out to extract it from my browser.
+
 I primarily use Firefox, and Firefox stores my browsing history in a SQLite
 database - ~places.sqlite~. It's made per-profile, and for my Windows machine,
 it was located at 
 ~C:\Users\<username>\AppData\Roaming\Mozilla\Firefox\Profiles\<profile name>\places.sqlite~.
+
+You can locate your own ~places.sqlite~ file using the instructions given [[https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data][here]] -
+only if you're Firefox like me. The entire process of getting the data if you're using Chrome will be different (and not documented here).
 
 To keep my browing history database safe from any corruption, I made a copy to work on:
 
@@ -48,22 +62,44 @@ con <- dbConnect(RSQLite::SQLite(), "C:/Users/Milind/Documents/places_snapshot.s
 
 The schema of the database is available [[https://wiki.mozilla.org/images/d/d5/Places.sqlite.schema3.pdf][here]].
 
-The table ~moz_places~ contains a list of all pages I've ever visited.
+The table ~moz_places~ contains a list of all pages I've ever visited, along with some data about each page (including the hostname).
+However, it doesn't maintain any information about the time(s) I have visited a page. 
+No matter how many times I visit milindl.org, it appears only once in ~moz_places~.
 
 The table ~moz_historyvisits~ contains information about every visit to a page:
-    - the id of the page itself, a reference to the page in the table ~moz_places~
-    - the page from which I came to this page - to track the "flow"
+    - an id - a numeric primary key
+    - a reference ~place_id~ which helps me get details about the page visited - a foreign key to ~moz_places~
+    - a reference ~from_visit~ to the previous "visit" from which I came to this "visit" - a foreign key to ~moz_historyvisits~ itself
     - a ~visit_type~, an integer which determines how I ended up on this page
+    - timestamp, etc.
 
 It took some additional code reading to understand what each ~visit_type~
 corresponded to - each corresponds to a transition type, found in the file 
 [[https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/places/nsINavHistoryService.idl#l946][nsINavHistoryService.idl]].
 
+There are (for the most part) two ways I might visit a page. Either I click on a link which leads to that page,
+or else I type the URL of the page into the address bar of the browser manually.
+
+Clicking a link corresponds to a ~visit_type~ of ~1~.
+
+Typing the URL corresponds to a ~visit_type~ of ~2~. For this ~visit_type~, no ~from_visit~ is stored because I did not come from a previous visit.
+
+Let's look at an example for this:
+    1. I type "http://www.milindl.org/xyz" into the address bar.
+    2. I click on a link on the page in (1) which points to "http://www.example.com".
+    3. I click on a link on the page in (2) which points back to "http://www.milindl.org/xyz".
+
+That sequence would generate the following data:
+
+[[/www/assets/img/moz_places_illustration.png]]
+
+Note that the hostnames are stored in the ~moz_places~ table in the ~rev_host~ column - and they're
+reversed. So, to get the actual hostnames, we need to reverse them later.
+
 Putting this information together, we need two queries to get the data.
 
-First, a query to get the list of all pages I have visited by clicking links.
-
-That corresponds to a ~visit_type~ of ~1~.
+First, a query to get the list of all pages I have visited by clicking links. In this case, both
+~to~ and ~from~ are available in the tables.
 
 We extract both the source (where I clicked the link) and target (the page I
 ended up on after clicking the link).
@@ -78,14 +114,12 @@ res <- dbSendQuery(con, "select p1.rev_host as target_host, p2.rev_host as sourc
 t1 <- dbFetch(res)
 #+END_SRC
 
-
 Second, a query to get a list of all the pages I have visited by typing them in
 the address bar.
 
-That corresponds to a ~visit_type~ of ~2~.
-
 In this case, Firefox doesn't save a source, so we use the a constant source,
-"new_tab".
+"new_tab". So, every page visited by typing the URL in the address bar has its ~from~
+set as "new_tab".
 
 #+BEGIN_SRC R
 res <- dbSendQuery(con, "select p1.rev_host as target_host, \"bat_wen\" as source_host
@@ -97,11 +131,7 @@ t2 <- dbFetch(res)
 #+END_SRC
 
 Notice that I have reversed "new_tab" in the above query - that's to make
-it identical to the other hosts we are fetching.
-
-The hostnames are stored in the tables in the ~rev_host~ column - and they're
-reversed. So, to get the actual hostnames, we need to reverse them, and join
-the two different types of data above.
+it identical to the other hosts we are fetching, so we can reverse them together.
 
 #+BEGIN_SRC r
 # Merge and clean the data.
@@ -123,14 +153,15 @@ Here's the result:
 6  .www.r-project.org .cran.r-project.org
 #+END_SRC
 
+We haven't yet aggregated the data, so there are repeated entries. We will do that later in this post.
+
 * Converting it to a Graph
 
 R has a few handy packages/primitives that help us convert this data
 into a directed graph.
 
-But there is a problem. I have a habit of searching for tech questions on google, and then clicking
-the stackoverflow link - a lot of times. That means there are a lot of edges from
-google to stackoverflow.
+But there is a problem - since we haven't yet aggregated the data, there are repeated entries, which will
+lead to multiple edges from the same source to the same target.
 
 This looks quite bad - rather than multiple edges from one host to another, I would
 want to show a thicker/darker edge.  So, for now, we remove all the duplicate edges.
