@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2022-01-09T16:25:15+05:30</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2022-01-09T21:54:52+05:30</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
 </subtitle><entry><title type="html">Readings January 2022</title><link href="/www/2022/01/01/Readings_January.html" rel="alternate" type="text/html" title="Readings January 2022" /><published>2022-01-01T00:00:00+05:30</published><updated>2022-01-01T00:00:00+05:30</updated><id>/www/2022/01/01/Readings_January</id><content type="html" xml:base="/www/2022/01/01/Readings_January.html">&lt;p&gt;I&amp;#8217;ve decided note down the things I read every month - especially those I find interesting.&lt;/p&gt;
 &lt;p&gt;Each item has a summary along with it, as well as tags, depending on what it is related to. A 📝 marks a paper,
   a 📚 marks a book, and 🌐 represents a site/blog.&lt;/p&gt;
@@ -6,7 +6,7 @@
   of the topic at hand, but not in-depth knowledge. I note them here, marked with a ⏩ sign.&lt;/p&gt;
 &lt;p&gt;This page will grow week-by-week till February, when I will start another page.&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;📚 ⏩ &lt;b&gt;Types and Programming Languages&lt;/b&gt;  &lt;br /&gt;
+  &lt;li&gt;📚 ⏩ &lt;b&gt;&lt;a href=&quot;https://www.goodreads.com/book/show/112252.Types_and_Programming_Languages&quot;&gt;Types and Programming Languages&lt;/a&gt;&lt;/b&gt;  &lt;br /&gt;
     This book, roughly, defines what type is, and tells how types are useful. This is followed by instructions
     of how to define the syntax and semantics of languages, and how to type languages. I only read this upto
     7-8 chapters - most of the content has already been covered in my undergraduate courses.
@@ -34,7 +34,7 @@
     &lt;i&gt;[tags:assembly, rant]&lt;/i&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;ul&gt;
-  &lt;li&gt;📚 &lt;b&gt;Prisoners of Geography&lt;/b&gt; &lt;br /&gt;
+  &lt;li&gt;📚 &lt;b&gt;&lt;a href=&quot;https://www.goodreads.com/book/show/25135194-prisoners-of-geography&quot;&gt;Prisoners of Geography&lt;/a&gt;&lt;/b&gt; &lt;br /&gt;
     A book I received as a gift - on geopolitics. It explains, in layperson terms, the complex political situations of various countries. Of course, as
     you might have figured out, there&amp;#8217;s special focus on how geography plays a part in influencing the actions of every nation. This book
     was a great read, and a great gift from &lt;a href=&quot;https://github.com/santwanav/&quot;&gt;Santwana&lt;/a&gt;.
