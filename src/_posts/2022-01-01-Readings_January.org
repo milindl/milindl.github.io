@@ -1,0 +1,50 @@
+---
+layout: default
+title: Readings January 2022
+summary: Things I read in January 2022
+---
+
+I've decided note down the things I read every month - especially those I find interesting.
+
+Each item has a summary along with it, as well as tags, depending on what it is related to. A 📝 marks a paper,
+a 📚 marks a book, and 🌐 represents a site/blog.
+
+It isn't uncommon for me to skim something, rather than reading it thoroughly. This gives me an idea
+of the topic at hand, but not in-depth knowledge. I note them here, marked with a ⏩ sign.
+
+This page will grow week-by-week till February, when I will start another page.
+
+
+    - 📚 ⏩ *Types and Programming Languages*  \\
+      This book, roughly, defines what type is, and tells how types are useful. This is followed by instructions
+      of how to define the syntax and semantics of languages, and how to type languages. I only read this upto
+      7-8 chapters - most of the content has already been covered in my undergraduate courses.
+      /[tags:types, programming-languages]/
+
+      
+    - 🌐 *[[https://chaidarun.com/ten-years-of-logging-my-life][Ten Years of Logging My Life]]* \\
+      An interesting blog post on recording day-to-day patterns and analyzing them.
+      /[tags:self-improvement, logging]/
+
+      
+    - 🌐 ⏩ *[[http://notebook.kulchenko.com/programming/lua-good-different-bad-and-ugly-parts][Lua: Good, bad, and ugly parts]]* \\
+      A blog post on various aspects of Lua - I don't know the language yet, but I read it to see if I want to learn it, or not.
+      I think I do.
+      /[tags:programming-languages, lua, learning]/
+
+      
+    - 🌐 ⏩ *[[https://marc.info/?l=git&m=124111702609723&w=2][Why git is so fast]]* \\
+      Some of the optimizations git makes. Has special focus on why C is the language of choice (rather than, say, Java).
+      /[tags:programming-languages, optimization, git, learning]/
+
+      
+    - 🌐 *[[https://outerproduct.net/2021-02-13_att-asm.html][Why no one should use the AT&T syntax ever, for any reason, under any circumstances]]*\\
+      An opinion piece on why AT&T assembly syntax is confusing and poorly designed. A fun read.
+      /[tags:assembly, rant]/
+
+
+    - 📚 *Prisoners of Geography* \\
+      A book I received as a gift - on geopolitics. It explains, in layperson terms, the complex political situations of various countries. Of course, as
+      you might have figured out, there's special focus on how geography plays a part in influencing the actions of every nation. This book
+      was a great read, and a great gift from [[https://github.com/santwanav/][Santwana]].
+      /[tags:geography, politics, learning]/

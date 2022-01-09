@@ -32,4 +32,5 @@ include:
 exclude:
   - Gemfile
   - Gemfile.lock
+  - vendor
 destination: ../www
