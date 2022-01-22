@@ -48,3 +48,35 @@ This page will grow week-by-week till February, when I will start another page.
       you might have figured out, there's special focus on how geography plays a part in influencing the actions of every nation. This book
       was a great read, and a great gift from [[https://github.com/santwanav/][Santwana]].
       /[tags:geography, politics, learning]/
+
+
+    - 🌐 *[[https://www.redblobgames.com/pathfinding/a-star/introduction.html][Introduction to the A* Algorithm]]* \\
+      An interactive blog post about A* pathfinding algorithm, and comparing it to BFS and Djikstra's algorithm. This is
+      specifically in relation to making games, maybe why I enjoyed so much.
+      /[tags:game-making, algorithms, learning]/
+
+
+    - 🌐 ⏩ *[[http://theory.stanford.edu/~amitp/GameProgramming/MapRepresentations.html][Map representations]]* \\
+      A blog post about how to split up maps into nodes and edges, and navmeshing - so the above algorithms can be applied. Tradeoffs
+      between path quality, speed are discussed. Again, this was sprcifically in relation to making games.
+      /[tags:game-making, learning, algorithms]/
+    
+
+    - 🌐 *[[https://www.cuesta.edu/student/resources/ssc/study_guides/reading_comp/305_read_text.html][How To Read A Textbook]]* \\
+      An article describing a way to read textbooks for maximum retention - this was specifically focused on tests,
+      not just reading for the sake of reading. The article derives from a very old 1941 paper, and it seemed a bit
+      _too_ test focused for me. But still, it may be worth a go.
+      /[tags:learning, self-improvement]/
+
+
+    - 🌐 *[[https://fly.io/blog/the-5-hour-content-delivery-network/][The 5-hour CDN]]* \\
+      An article describing how CDNs work by way of instructing the reader of a simple way to make one. I was introduced
+      to several concepts in this article - traffic direction to nearby servers, layered CDN, etc.
+      /[tags:learning, cdn, web-server]/
+
+
+    - 🌐 ⏩ *[[https://portswigger.net/research/practical-web-cache-poisoning][Practical Web Cache Poisoning]]* \\
+      A /very/ in-depth look at cache poisoning with several exploits detailed along with the basic idea of cache poisoning.
+      I read it to get a basic idea of what a cache poisoning attack looks like - and I also enjoyed skimming through the
+      more complex exploits, though I did not understand them all.
+      /[tags: learnning, security, cache-poisoning]/
