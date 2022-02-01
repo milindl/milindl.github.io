@@ -47,7 +47,7 @@ This page will grow week-by-week till February, when I will start another page.
       A book I received as a gift - on geopolitics. It explains, in layperson terms, the complex political situations of various countries. Of course, as
       you might have figured out, there's special focus on how geography plays a part in influencing the actions of every nation. This book
       was a great read, and a great gift from [[https://github.com/santwanav/][Santwana]].
-      /[tags:geography, politics, learning]/
+      /[tags:geography, politics, learning, non-fiction]/
 
 
     - 🌐 *[[https://www.redblobgames.com/pathfinding/a-star/introduction.html][Introduction to the A* Algorithm]]* \\
@@ -79,4 +79,34 @@ This page will grow week-by-week till February, when I will start another page.
       A /very/ in-depth look at cache poisoning with several exploits detailed along with the basic idea of cache poisoning.
       I read it to get a basic idea of what a cache poisoning attack looks like - and I also enjoyed skimming through the
       more complex exploits, though I did not understand them all.
-      /[tags: learnning, security, cache-poisoning]/
+      /[tags: learning, security, cache-poisoning]/
+
+    - 🌐 *[[https://viralinstruction.com/posts/defense/][In defense of complicated programming languages]]* \\
+      An article on why languages evolve to have "complex" abstractions - because if we didn't have these abstractions, it leads
+      to ad-hoc versions of these abstractions coming up in code anyway. Complex abstractions also help in increasing the ratio 
+      of issues found at compile time, to issues found at run time.
+      /[tags: programming, learning, complexity]/
+
+
+    - 📚 *[[https://www.goodreads.com/book/show/35657708-how-to-build-a-car][How to Build a Car]]* \\
+      An autobiography of Adrian Newey - the man behind the design of many, /many/ championship winning Formula 1 cars. He provides an
+      insider's view of the F1 circus, stories from his life, and easily digestible bits of many of his innovative designs.
+      /[tags: autobiography, formula-1, non-fiction]/
+
+
+    - 📚 *[[https://www.goodreads.com/book/show/7061.The_No_1_Ladies_Detective_Agency][The No.1 Ladies' Detective Agency]]* \\
+      A fun read about Botswana's only detective agency run by women - set in Botswana of I don't know how many years. I can't make out
+      whether it's the 1960s, or the 1900s, but the book is an engaging read, and the characters drew me in.
+      /[tags: fiction, detective]/
+
+
+    - 📚 ⏩ *[[https://www.goodreads.com/book/show/50805762-the-guide-to-lucknow][The Guide to Lucknow]]* \\
+      A book over 100 years old detailing the notable locations in and around Lucknow, providing a blow-by-blow narration of the effects
+      and events of 1857 sepoy mutiny in Lucknow, and recent history (recent, from the perspective of the book. So from the 1600s or so).
+      I skimmed through a large part of it because it was like reading a fact-sheet, and quite repetitive. Also, it really puts into
+      perspective how much the time and environment of publication influences who literature portrays as the "good guys" (in this case,
+      the colonial government are portrayed as "good" and "brave").
+      /[tags: history, non-fiction, lucknow]/
+
+      
+
