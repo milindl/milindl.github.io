@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2022-02-01T22:28:57+05:30</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="/www/feed.xml" rel="self" type="application/atom+xml" /><link href="/www/" rel="alternate" type="text/html" /><updated>2022-02-01T22:30:52+05:30</updated><id>/www/feed.xml</id><title type="html">Milind’s Writeups</title><subtitle>Personal blog of Milind Luthra. All opinions here are my own.
 </subtitle><entry><title type="html">Readings January 2022</title><link href="/www/2022/01/01/Readings_January.html" rel="alternate" type="text/html" title="Readings January 2022" /><published>2022-01-01T00:00:00+05:30</published><updated>2022-01-01T00:00:00+05:30</updated><id>/www/2022/01/01/Readings_January</id><content type="html" xml:base="/www/2022/01/01/Readings_January.html">&lt;p&gt;I&amp;#8217;ve decided note down the things I read every month - especially those I find interesting.&lt;/p&gt;
 &lt;p&gt;Each item has a summary along with it, as well as tags, depending on what it is related to. A 📝 marks a paper,
   a 📚 marks a book, and 🌐 represents a site/blog.&lt;/p&gt;
@@ -41,7 +41,7 @@
     &lt;i&gt;[tags:geography, politics, learning, non-fiction]&lt;/i&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;ul&gt;
-  &lt;li&gt;🌐 &lt;b&gt;&lt;a href=&quot;https://www.redblobgames.com/pathfinding/a-star/introduction.html&quot;&gt;Introduction to the A&lt;/b&gt; Algorithm&lt;/a&gt;* &lt;br /&gt;
+  &lt;li&gt;🌐 &lt;b&gt;&lt;a href=&quot;https://www.redblobgames.com/pathfinding/a-star/introduction.html&quot;&gt;Introduction to the A * Algorithm&lt;/a&gt;&lt;/b&gt; &lt;br /&gt;
     An interactive blog post about A* pathfinding algorithm, and comparing it to BFS and Djikstra&amp;#8217;s algorithm. This is
     specifically in relation to making games, maybe why I enjoyed so much.
     &lt;i&gt;[tags:game-making, algorithms, learning]&lt;/i&gt;&lt;/li&gt;
