@@ -81,6 +81,7 @@ This page will grow week-by-week till February, when I will start another page.
       more complex exploits, though I did not understand them all.
       /[tags: learning, security, cache-poisoning]/
 
+
     - 🌐 *[[https://viralinstruction.com/posts/defense/][In defense of complicated programming languages]]* \\
       An article on why languages evolve to have "complex" abstractions - because if we didn't have these abstractions, it leads
       to ad-hoc versions of these abstractions coming up in code anyway. Complex abstractions also help in increasing the ratio 
@@ -108,5 +109,5 @@ This page will grow week-by-week till February, when I will start another page.
       the colonial government are portrayed as "good" and "brave").
       /[tags: history, non-fiction, lucknow]/
 
-      
+
 
